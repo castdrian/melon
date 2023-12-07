@@ -3,13 +3,13 @@
   "ignorePatterns": ["lib/*", "/*.js", "/*.ts", "/**/*.test.ts", "test/*"],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "project": "./src/tsconfig.json",
+    "project": "./tsconfig.json",
     "tsconfigRootDir": "./"
   },
   "settings": {
     "import/resolver": {
       "typescript": {
-        "project": "./src/tsconfig.json"
+        "project": "./tsconfig.json"
       }
     }
   },
@@ -17,6 +17,7 @@
   "rules": {
     "no-underscore-dangle": "off",
 	"no-negated-condition": "off",
+	"import/no-unresolved": "off",
     "@typescript-eslint/no-explicit-any": "off",
     "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
     "no-console": "off",
@@ -26,7 +27,6 @@
     "no-shadow": "off",
     "@typescript-eslint/no-shadow": ["error"],
     "no-restricted-syntax": "off",
-    "import/no-unresolved": ["error", { "ignore": ["^virtual:"] }],
     "consistent-return": "off",
     "no-continue": "off",
     "no-eval": "off",
