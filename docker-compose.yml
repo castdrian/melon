@@ -1,12 +1,13 @@
 version: '3.8'
 
 services:
-  mw_bot:
+  melon:
     build:
       context: .
       dockerfile: Dockerfile
-      target: base
-    volumes:
-      - ./:/home/bun/app
+      target: release
     container_name: melon
+    env_file:
+      - .env
     command: bun start
+
