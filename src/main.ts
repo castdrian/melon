@@ -9,7 +9,7 @@ import '@src/commands/_load';
 ApplicationCommandRegistries.setDefaultGuildIds(config.devGuildId ? [config.devGuildId] : undefined);
 
 const client = new SapphireClient({
-  intents: [GatewayIntentBits.Guilds],
+  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages],
 });
 
 await client.login(config.discordToken);

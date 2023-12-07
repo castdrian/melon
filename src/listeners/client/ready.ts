@@ -4,7 +4,8 @@ import { ActivityType, Client } from 'discord.js';
 
 @ApplyOptions<ListenerOptions>({ once: true })
 export class ReadyListener extends Listener {
-  public run(client: Client) {
+  public async run(client: Client) {
+    await client.application?.fetch();
     client.user?.setActivity({ type: ActivityType.Custom, state: 'being melon', name: 'melon' });
 
     const { username, id } = client.user!;
