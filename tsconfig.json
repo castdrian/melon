@@ -12,7 +12,7 @@
     "downlevelIteration": true,
     "skipLibCheck": true,
     "jsx": "preserve",
-	"experimentalDecorators": true,
+    "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
     "allowJs": true,
@@ -20,7 +20,11 @@
       "bun-types" // add Bun global
     ],
 	"paths": {
-		"@src/*": ["./src/*"]
-	  }
-  }
-}
+		"@root/*": ["./*"],
+		"@src/*": ["./src/*"],
+	}
+  },
+  "include": [
+    "./**/*.ts",
+    "./package.json"
+  ]}

@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 const schema = z.object({
 	discordToken: z.string().min(1),
-	guildId: z.string().optional(),
+	devGuildId: z.string().optional(),
 });
   
 const prefix = 'CONF_';
