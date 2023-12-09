@@ -24,7 +24,7 @@ export class EventsCommand extends Command {
         const embed = {
           title: 'Scheduled Events',
           thumbnail: {
-            url: this.container.client.user!.displayAvatarURL(),
+            url: interaction.guild?.iconURL() ?? interaction.client.user.displayAvatarURL(),
           },
           fields: page.map((event) => ({
             name: event.name,
