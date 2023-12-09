@@ -1,29 +1,44 @@
+import { PaginatedMessage } from '@sapphire/discord.js-utilities';
 import { Command } from '@sapphire/framework';
 import { CommandInteraction, time } from 'discord.js';
 
 export class EventsCommand extends Command {
   public override async chatInputRun(interaction: CommandInteraction) {
     try {
-      const { scheduledEvents: events } = interaction.guild ?? {};
-      if (!events) return await interaction.reply({ content: 'No events scheduled.', ephemeral: true });
-      await events.fetch();
-      if (events.cache.size === 0) return await interaction.reply({ content: 'No events scheduled.', ephemeral: true });
+      if (!interaction.isChatInputCommand()) return;
 
-      const eventsArray = [...events.cache.values()].slice(0, 25);
+      const { scheduledEvents } = interaction.guild ?? {};
+      if (!scheduledEvents) return await interaction.reply({ content: 'No events scheduled.', ephemeral: true });
+      const events = await scheduledEvents.fetch();
+      if (events.size === 0) return await interaction.reply({ content: 'No events scheduled.', ephemeral: true });
 
-      const embed = {
-        title: 'Scheduled Events',
-        thumbnail: {
-          url: this.container.client.user!.displayAvatarURL(),
-        },
-        fields: eventsArray.map((event) => ({
-          name: event.name,
-          value: `${time(event.scheduledStartAt!, 'R')} [open](${event.url})`,
-        })),
-        color: 0xd23b68,
-      };
+      const eventsArray = [...events.values()];
+      const pages = [];
+      while (eventsArray.length) {
+        pages.push(eventsArray.splice(0, 10));
+      }
 
-      await interaction.reply({ embeds: [embed] });
+      const paginatedMessage = new PaginatedMessage();
+
+      for (const page of pages) {
+        const embed = {
+          title: 'Scheduled Events',
+          thumbnail: {
+            url: this.container.client.user!.displayAvatarURL(),
+          },
+          fields: page.map((event) => ({
+            name: event.name,
+            value: `${time(event.scheduledStartAt!, 'R')} ${time(event.scheduledStartAt!)} [event details](${
+              event.url
+            })`,
+          })),
+          color: 0xd23b68,
+        };
+
+        paginatedMessage.addPageEmbed(embed);
+      }
+
+      await paginatedMessage.run(interaction);
     } catch (ex) {
       this.container.logger.error(ex);
     }

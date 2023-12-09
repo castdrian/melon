@@ -4,7 +4,7 @@
   "module": "main.ts",
   "main": "src/main.ts",
   "type": "module",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "scripts": {
     "lint": "eslint --ext .ts src",
     "lint:fix": "eslint --fix --ext .ts src",
@@ -29,6 +29,7 @@
   },
   "dependencies": {
     "@sapphire/decorators": "^6.0.2",
+    "@sapphire/discord.js-utilities": "^7.1.3",
     "@sapphire/framework": "latest",
     "@sapphire/plugin-logger": "^4.0.1",
     "discord.js": "^14.13.0",
