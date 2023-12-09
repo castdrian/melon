@@ -1,6 +1,6 @@
 import { cpus, totalmem } from 'os';
 
-import { Command, container, version as sapphver } from '@sapphire/framework';
+import { Command, version as sapphver } from '@sapphire/framework';
 import { version as bunver } from 'bun';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, CommandInteraction, version as djsver, time } from 'discord.js';
 import { version as tsver } from 'typescript';
@@ -60,9 +60,3 @@ export class InfoCommand extends Command {
     );
   }
 }
-
-void container.stores.loadPiece({
-  piece: InfoCommand,
-  name: 'info',
-  store: 'commands',
-});

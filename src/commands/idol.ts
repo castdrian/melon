@@ -1,6 +1,6 @@
 import * as path from 'path';
 
-import { Command, container } from '@sapphire/framework';
+import { Command } from '@sapphire/framework';
 import { ApplicationCommandType, Message, MessageContextMenuCommandInteraction } from 'discord.js';
 
 export class IdolCommand extends Command {
@@ -25,9 +25,3 @@ export class IdolCommand extends Command {
     );
   }
 }
-
-void container.stores.loadPiece({
-  piece: IdolCommand,
-  name: 'idol',
-  store: 'commands',
-});

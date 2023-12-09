@@ -1,4 +1,4 @@
-import { Command, container } from '@sapphire/framework';
+import { Command } from '@sapphire/framework';
 import { CommandInteraction, time } from 'discord.js';
 
 export class EventsCommand extends Command {
@@ -37,9 +37,3 @@ export class EventsCommand extends Command {
     );
   }
 }
-
-void container.stores.loadPiece({
-  piece: EventsCommand,
-  name: 'events',
-  store: 'commands',
-});

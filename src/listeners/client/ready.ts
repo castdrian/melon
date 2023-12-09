@@ -1,5 +1,5 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import { Listener, type ListenerOptions, container } from '@sapphire/framework';
+import { Listener, type ListenerOptions } from '@sapphire/framework';
 import { ActivityType, Client } from 'discord.js';
 
 @ApplyOptions<ListenerOptions>({ once: true })
@@ -12,9 +12,3 @@ export class ReadyListener extends Listener {
     this.container.logger.info(`Successfully logged in as ${username} (${id})`);
   }
 }
-
-void container.stores.loadPiece({
-  piece: ReadyListener,
-  name: 'ready',
-  store: 'listeners',
-});
