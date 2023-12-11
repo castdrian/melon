@@ -4,7 +4,7 @@
   "module": "main.ts",
   "main": "src/main.ts",
   "type": "module",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "scripts": {
     "lint": "eslint --ext .ts src",
     "lint:fix": "eslint --fix --ext .ts src",
@@ -33,6 +33,8 @@
     "@sapphire/framework": "latest",
     "@sapphire/plugin-logger": "^4.0.1",
     "discord.js": "^14.13.0",
+    "fast-fuzzy": "^1.12.0",
+    "kpopnet.json": "^2.0.5",
     "neat-config": "^2.0.0",
     "zod": "^3.22.4"
   }
