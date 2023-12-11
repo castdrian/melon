@@ -21,8 +21,11 @@ export class SearchCommand extends Command {
           title: `${idol.name} (${idol.name_original})`,
           description: `**Real Name:** ${
             idol.real_name ? `${idol.real_name} (${idol.real_name_original})\n` : ''
-          }**Birth Date:** ${time(new Date(idol.birth_date), 'D')}\n**Debut Date:** ${
-            idol.debut_date ? time(new Date(idol.debut_date), 'D') : ''
+          }**Birth Date:** ${time(new Date(idol.birth_date), 'D')} (${time(
+            new Date(idol.birth_date),
+            'R',
+          )})\n**Debut Date:** ${
+            idol.debut_date ? `${time(new Date(idol.debut_date), 'D')} (${time(new Date(idol.debut_date), 'R')})` : ''
           }${idol.height ? `\n**Height:** ${idol.height} CM` : ''}${
             idol.weight ? `\n**Weight:** ${idol.weight} KG` : ''
           }\n\n**Groups:**\n ${idol.groups.map((id) => groups.find((grp) => grp.id === id)!.name).join('\n')}`,
@@ -38,9 +41,16 @@ export class SearchCommand extends Command {
         const embed = {
           title: `${group.name} (${group.name_original})`,
           description: `**Agency:** ${group.agency_name}\n**Debut Date:** ${
-            group.debut_date ? time(new Date(group.debut_date), 'D') : ''
+            group.debut_date
+              ? `${time(new Date(group.debut_date), 'D')} (${time(new Date(group.debut_date), 'R')})`
+              : ''
           }${
-            group.disband_date ? `\n**Disband Date:** ${time(new Date(group.disband_date), 'D')}` : ''
+            group.disband_date
+              ? `\n**Disband Date:** ${time(new Date(group.disband_date), 'D')} (${time(
+                  new Date(group.disband_date),
+                  'R',
+                )})`
+              : ''
           }\n\n**Members:**\n ${group.members
             .map((member) => {
               const m = idols.find((i) => i.id === member.idol_id)!;
