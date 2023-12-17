@@ -1,7 +1,7 @@
 import { Command } from '@sapphire/framework';
 import { AutocompleteInteraction, CommandInteraction, time } from 'discord.js';
 import { search } from 'fast-fuzzy';
-import kpop from 'kpopnet.json';
+import kpop, { Idol } from 'kpopnet.json';
 
 export class SearchCommand extends Command {
   public override async chatInputRun(interaction: CommandInteraction) {
@@ -28,7 +28,7 @@ export class SearchCommand extends Command {
             idol.debut_date ? `${time(new Date(idol.debut_date), 'D')} (${time(new Date(idol.debut_date), 'R')})` : ''
           }${idol.height ? `\n**Height:** ${idol.height} CM` : ''}${
             idol.weight ? `\n**Weight:** ${idol.weight} KG` : ''
-          }\n\n**Groups:**\n ${idol.groups.map((id) => groups.find((grp) => grp.id === id)!.name).join('\n')}`,
+          }\n\n**Groups:**\n${idol.groups.map((id) => groups.find((grp) => grp.id === id)!.name).join('\n')}`,
           thumbnail: {
             url: idol.thumb_url!,
           },
@@ -51,7 +51,7 @@ export class SearchCommand extends Command {
                   'R',
                 )})`
               : ''
-          }\n\n**Members:**\n ${group.members
+          }\n\n**Members:**\n${group.members
             .map((member) => {
               const m = idols.find((i) => i.id === member.idol_id)!;
               return `${m.name} (${m.name_original})`;
@@ -86,7 +86,11 @@ export class SearchCommand extends Command {
         limit: 5,
       })
         .map((match) => ({
-          name: `${match.item.name} (${match.item.name_original})`,
+          name: `${match.item.name} (${match.item.name_original}) ${
+            (match.item as Idol).groups.length > 0
+              ? ` - ${groups.find((g) => g.id === (match.item as Idol).groups[0])!.name}`
+              : ''
+          }`,
           value: match.item.id,
         }))
         .splice(0, 5);
