@@ -28,7 +28,11 @@ export class SearchCommand extends Command {
             idol.debut_date ? `${time(new Date(idol.debut_date), 'D')} (${time(new Date(idol.debut_date), 'R')})` : ''
           }${idol.height ? `\n**Height:** ${idol.height} CM` : ''}${
             idol.weight ? `\n**Weight:** ${idol.weight} KG` : ''
-          }\n\n**Groups:**\n${idol.groups.map((id) => groups.find((grp) => grp.id === id)!.name).join('\n')}`,
+          }${
+            idol.groups.length > 0
+              ? `\n\n**Groups:**\n${idol.groups.map((id) => groups.find((grp) => grp.id === id)!.name).join('\n')}`
+              : ''
+          }`,
           thumbnail: {
             url: idol.thumb_url!,
           },
