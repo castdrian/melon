@@ -1,18 +1,40 @@
 import { Command } from '@sapphire/framework';
 import { AutocompleteInteraction, CommandInteraction, time } from 'discord.js';
 import { search } from 'fast-fuzzy';
-import kpop, { Idol } from 'kpopnet.json';
+import kpop, { Group, Idol } from 'kpopnet.json';
 
 export class SearchCommand extends Command {
   public override async chatInputRun(interaction: CommandInteraction) {
     try {
       const { value } = interaction.options.get('query', true);
+      if (!value) return interaction.reply('Please provide a search query.');
+      if (typeof value !== 'string') return interaction.reply('Please provide a valid search query.');
+
       const { idols, groups } = kpop;
 
-      const idol = idols.find((i) => i.id === value);
-      const group = groups.find((g) => g.id === value);
+      let idol = idols.find((i) => i.id === value);
+      let group = groups.find((g) => g.id === value);
 
       if (!idol && !group) {
+        const fuzzySearch = search(value, [...idols, ...groups], {
+          keySelector: (item) => {
+            if ('real_name' in item) {
+              return [item.name, item.real_name, item.real_name_original, item.name_alias, item.name_original].join(
+                ' ',
+              );
+            }
+            return [item.name, item.name_alias, item.name_original].join(' ');
+          },
+        });
+
+        if (fuzzySearch.length > 0) {
+          const match = fuzzySearch[0];
+          if ('real_name' in match) {
+            idol = match as Idol;
+          } else {
+            group = match as Group;
+          }
+        }
         return interaction.reply('Could not find an idol or group with that ID.');
       }
 
