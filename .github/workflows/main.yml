@@ -4,9 +4,14 @@ on:
   push:
     branches:
         - main
+    paths-ignore:
+      - '**/*.md'
+      - '**.github/workflows/*'
 
 jobs:
   bump:
+    permissions:
+        contents: write
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -14,9 +19,8 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: 'Automated Version Bump'
-        id: version-bump
-        uses: 'phips28/gh-action-bump-version@master'
+      - name: Automated Version Bump
+        uses: phips28/gh-action-bump-version@v10.1.1
         with:
           skip-tag:  'true'
         env:
