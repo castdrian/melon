@@ -6,9 +6,15 @@ import { ActivityType, Client } from 'discord.js';
 export class ReadyListener extends Listener {
   public async run(client: Client) {
     await client.application?.fetch();
-    client.user?.setActivity({ type: ActivityType.Custom, state: 'being melon', name: 'melon' });
 
     const { username, id } = client.user!;
     this.container.logger.info(`Successfully logged in as ${username} (${id})`);
+
+    const updateActivity = () => {
+      client.user?.setActivity({ type: ActivityType.Custom, state: 'being melon', name: 'melon' });
+    };
+
+    updateActivity();
+    setInterval(updateActivity, 30e3);
   }
 }
