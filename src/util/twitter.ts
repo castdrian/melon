@@ -42,6 +42,7 @@ export async function scrapeTweet(tweetId: string, message: Message) {
       await message.reply({ content, files: attachments });
     }
   } catch (error) {
+    await message.channel.send(`An error occurred in scrapeTweet: ${error}`).catch(() => null);
     message.client.logger.error(`An error occurred in scrapeTweet: ${error}`);
   }
 }
