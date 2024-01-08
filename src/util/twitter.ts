@@ -39,6 +39,7 @@ export async function scrapeTweet(tweetId: string, message: Message) {
       await message.channel.send({ content, files: attachments });
       await message.delete().catch(() => null);
     } else {
+      await message.suppressEmbeds(true).catch(() => null);
       await message.reply({ content, files: attachments });
     }
   } catch (error) {
