@@ -7,7 +7,7 @@ the all-in-one k-pop discord bot
 ### Docker
 
 ```bash
-docker-compose up --build
+sudo docker compose up --build
 ```
 
 ### Local
