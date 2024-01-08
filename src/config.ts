@@ -4,6 +4,8 @@ import { z } from 'zod';
 const schema = z.object({
   discordToken: z.string().min(1),
   devGuildId: z.string().optional(),
+  instagramUsername: z.string().min(1),
+  instagramPassword: z.string().min(1),
 });
 
 const prefix = 'CONF_';

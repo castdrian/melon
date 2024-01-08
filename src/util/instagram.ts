@@ -1,0 +1,52 @@
+import { type BufferResolvable, type Message, time } from 'discord.js';
+import { getCookie, igApi } from 'insta-fetcher';
+
+import { config } from '@src/config';
+
+enum ResponseFlags {
+  SHOW_CONTENT = '-c',
+  DELETE_MESSAGE = '-d',
+}
+
+export async function scrapeInstagram(instagramURL: string, message: Message) {
+  try {
+    const sessionId = (await getCookie(config.instagramUsername, config.instagramPassword)) as string;
+    const ig = new igApi(sessionId);
+
+    const post = await ig.fetchPost(instagramURL);
+    if (!post) {
+      message.client.logger.info(`No post found for URL ${instagramURL}`);
+      return;
+    }
+
+    const attachments: BufferResolvable[] = [];
+
+    post.links.forEach(async (item) => {
+      if (item.type === 'image') {
+        const res = await fetch(item.url);
+        const buffer = Buffer.from(await res.arrayBuffer());
+        attachments.push(buffer);
+      } else if (item.type === 'video') {
+        attachments.push(item.url);
+      }
+    });
+
+    const shouldShowContent = message.content.toLowerCase().includes(ResponseFlags.SHOW_CONTENT);
+    const shouldDeleteMessage = message.content.toLowerCase().includes(ResponseFlags.DELETE_MESSAGE);
+
+    const content = `Posted ${time(post.taken_at_timestamp, 'R')} by [@${post.username}](<https://www.instagram.com/${
+      post.username
+    }>)${shouldShowContent ? `:\n\n${post.caption}` : ''}`;
+
+    if (shouldDeleteMessage) {
+      await message.channel.send({ content, files: attachments });
+      await message.delete().catch(() => null);
+    } else {
+      await message.suppressEmbeds(true).catch(() => null);
+      await message.reply({ content, files: attachments });
+    }
+  } catch (error) {
+    await message.channel.send(`An error occurred in scrapeInstagram: ${error}`).catch(() => null);
+    message.client.logger.error(`An error occurred in scrapeInstagram: ${error}`);
+  }
+}
