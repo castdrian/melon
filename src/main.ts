@@ -13,7 +13,7 @@ const client = new SapphireClient({
   intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent],
 });
 
-const sqlite = new Database(config.devGuildId ? ':memory:' : 'melon.db');
+const sqlite = new Database(config.devGuildId ? ':memory:' : 'melon.db', { create: true });
 const db = drizzle(sqlite);
 migrate(db, { migrationsFolder: './src/database/drizzle' });
 
