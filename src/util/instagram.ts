@@ -21,7 +21,7 @@ export async function scrapeInstagram(instagramURL: string, message: Message) {
 
     const attachments: BufferResolvable[] = [];
 
-    post.links.forEach(async (item) => {
+    for (const item of post.links) {
       if (item.type === 'image') {
         const res = await fetch(item.url);
         const buffer = Buffer.from(await res.arrayBuffer());
@@ -29,7 +29,7 @@ export async function scrapeInstagram(instagramURL: string, message: Message) {
       } else if (item.type === 'video') {
         attachments.push(item.url);
       }
-    });
+    }
 
     const shouldShowContent = message.content.toLowerCase().includes(ResponseFlags.SHOW_CONTENT);
     const shouldDeleteMessage = message.content.toLowerCase().includes(ResponseFlags.DELETE_MESSAGE);
