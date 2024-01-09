@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "f4a1281f-88e2-4b4f-87d8-4f39174cac0c",
+  "id": "e2738e86-4b9b-4b45-98f8-2f8621f8eb5a",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "guild_preferences": {
@@ -18,17 +18,17 @@
           "name": "twitter_auto_embed",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false,
-          "default": 0
+          "default": false
         },
         "instagram_auto_embed": {
           "name": "instagram_auto_embed",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false,
-          "default": 0
+          "default": false
         },
         "greeting_channel_id": {
           "name": "greeting_channel_id",

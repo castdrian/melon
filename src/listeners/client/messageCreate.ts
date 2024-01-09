@@ -1,6 +1,7 @@
 import { Listener } from '@sapphire/framework';
 import { ChannelType, Message } from 'discord.js';
 
+import { isInstagramAutoEmbedEnabled, isTwitterAutoEmbedEnabled } from '@root/src/database/db';
 import { scrapeInstagram } from '@root/src/util/instagram';
 import { scrapeTweet } from '@root/src/util/twitter';
 
@@ -11,12 +12,16 @@ export class MessageListener extends Listener {
 
     const tweetId = this.extractTweetId(message.content);
     if (tweetId) {
-      await scrapeTweet(tweetId, message);
+      if (await isTwitterAutoEmbedEnabled(message.guildId!)) {
+        await scrapeTweet(tweetId, message);
+      }
     }
 
     const instagramUrl = this.extractInstagramUrl(message.content);
     if (instagramUrl) {
-      await scrapeInstagram(instagramUrl, message);
+      if (await isInstagramAutoEmbedEnabled(message.guildId!)) {
+        await scrapeInstagram(instagramUrl, message);
+      }
     }
   }
 

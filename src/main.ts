@@ -6,6 +6,7 @@ import { migrate } from 'drizzle-orm/bun-sqlite/migrator';
 import '@sapphire/plugin-logger/register';
 
 import { config } from '@src/config';
+import * as schema from '@src/database/schema';
 
 ApplicationCommandRegistries.setDefaultGuildIds(config.devGuildId ? [config.devGuildId] : undefined);
 
@@ -14,7 +15,7 @@ const client = new SapphireClient({
 });
 
 const sqlite = new Database('melon.db');
-const db = drizzle(sqlite);
+const db = drizzle(sqlite, { schema });
 migrate(db, { migrationsFolder: './src/database/drizzle' });
 
 await client.login(config.discordToken);
