@@ -9,4 +9,6 @@ services:
     container_name: melon
     env_file:
       - .env
+    volumes:
+      - ./melon.db:/usr/src/app/melon.db
     command: bun start
