@@ -16,7 +16,7 @@ export async function getOrCreateGuildSettings(guildId: string) {
     .where(eq(schema.guildPreferences.id, guildId))
     .limit(1);
 
-  if (existingSettings) {
+  if (existingSettings.length > 0) {
     return existingSettings[0];
   }
 

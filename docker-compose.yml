@@ -10,5 +10,7 @@ services:
     env_file:
       - .env
     volumes:
-      - ./melon.db:/usr/src/app/melon.db
+     - type: bind
+       source: ./melon.db
+       target: /usr/src/app/melon.db
     command: bun start
