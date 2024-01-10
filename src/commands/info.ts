@@ -1,8 +1,7 @@
-import { cpus, totalmem } from 'os';
-
 import { Command, version as sapphver } from '@sapphire/framework';
 import { version as bunver } from 'bun';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, CommandInteraction, version as djsver, time } from 'discord.js';
+import { cpu, mem, osInfo } from 'systeminformation';
 import { version as tsver } from 'typescript';
 
 import pkg from '@root/package.json';
@@ -12,15 +11,20 @@ export class InfoCommand extends Command {
     try {
       const { readyAt } = this.container.client;
       const uptimeString = time(readyAt!, 'R');
-      const cpuCount = cpus().length;
-      const cpuModel = cpus()[0].model;
-      const osString = `${process.platform} ${cpuCount}x ${cpuModel}`;
-      const memory = process.memoryUsage().heapUsed / 1024 / 1024;
-      const memoryString = `${memory.toFixed(2)} MB / ${Math.round(totalmem() / 1024 / 1024)} MB`;
+
+      const { cores, manufacturer, brand, speedMax } = await cpu();
+      const { total } = await mem();
+      const { distro, release, arch } = await osInfo();
+
+      const osString = `${distro} ${release} ${arch}`;
+      const cpuString = `${cores}x ${manufacturer} ${brand} @ ${speedMax} GHz`;
+      const memoryString = `${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB / ${
+        total / 1024 / 1024
+      } MB`;
 
       const embed = {
         title: pkg.name,
-        description: `${pkg.name} [v${pkg.version}](<https://github.com/castdrian/melon>)\n${pkg.description}\n\n**Uptime:** Container started ${uptimeString}\n**System:** ${osString}\n**Memory Usage:** ${memoryString}\n\n**Bun:** [v${bunver}](<https://bun.sh/>)\n**TypeScript:** [v${tsver}](<https://www.typescriptlang.org/>)\n**Discord.js:** [v${djsver}](<https://discord.js.org/>)\n**Sapphire:** [v${sapphver}](<https://www.sapphirejs.dev/>)`,
+        description: `${pkg.name} [v${pkg.version}](<https://github.com/castdrian/melon>)\n${pkg.description}\n\n**Uptime:** Container started ${uptimeString}\n**System:** ${osString}\n**CPU:** ${cpuString}\n**Memory Usage:** ${memoryString}\n\n**Bun:** [v${bunver}](<https://bun.sh/>)\n**TypeScript:** [v${tsver}](<https://www.typescriptlang.org/>)\n**Discord.js:** [v${djsver}](<https://discord.js.org/>)\n**Sapphire:** [v${sapphver}](<https://www.sapphirejs.dev/>)`,
         thumbnail: {
           url: this.container.client.user!.displayAvatarURL(),
         },
