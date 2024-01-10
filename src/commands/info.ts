@@ -12,12 +12,12 @@ export class InfoCommand extends Command {
       const { readyAt } = this.container.client;
       const uptimeString = time(readyAt!, 'R');
 
-      const { cores, manufacturer, brand, speed } = await cpu();
+      const { cores, manufacturer, brand } = await cpu();
       const { total } = await mem();
       const { distro, release, arch } = await osInfo();
 
       const osString = `${distro} ${release} ${arch}`;
-      const cpuString = `${cores}x ${manufacturer} ${brand} @ ${speed} GHz`;
+      const cpuString = `${cores}x ${manufacturer} ${brand}`;
       const memoryString = `${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB / ${Math.round(
         total / 1024 / 1024,
       )} MB`;
