@@ -11,7 +11,7 @@ export async function scrapeTweet(tweetId: string, message: Message) {
     const tweet = await new Scraper().getTweet(tweetId);
     if (!tweet) {
       message.client.logger.info(`No tweet found for ID ${tweetId}`);
-      return;
+      throw new Error(`No tweet found for ID ${tweetId}`);
     }
 
     if (!tweet.photos.length && !tweet.videos.length) {

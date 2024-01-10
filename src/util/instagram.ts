@@ -16,7 +16,7 @@ export async function scrapeInstagram(instagramURL: string, message: Message) {
     const post = await ig.fetchPost(instagramURL);
     if (!post) {
       message.client.logger.info(`No post found for URL ${instagramURL}`);
-      return;
+      throw new Error(`No post found for URL ${instagramURL}`);
     }
 
     const attachments: BufferResolvable[] = [];
