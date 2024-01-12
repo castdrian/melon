@@ -41,14 +41,13 @@ export class InfoCommand extends Command {
         new ButtonBuilder()
           .setLabel('Add to Server')
           .setStyle(ButtonStyle.Link)
-          .setURL('https://github.com/castdrian/melon')
-          .setDisabled(true),
+          .setURL('https://forms.gle/EqwSH6XzFoC2knWs7'),
       );
 
       await interaction.reply({ embeds: [embed], components: [row] });
       await interaction.followUp({
         content:
-          '*This application is currently in its invite-only stage, if you wish to add it to your guild please contact [@castdrian](<https://discord.com/users/224617799434108928>) directly.*',
+          '*This application is currently in its invite-only stage, if you wish to add it to your guild please contact [@castdrian](<https://discord.com/users/224617799434108928>) directly or fill out the access request form.*',
         ephemeral: true,
       });
     } catch (ex) {
