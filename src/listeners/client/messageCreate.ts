@@ -13,12 +13,14 @@ export class MessageListener extends Listener {
     if (message.channel.type === ChannelType.DM) return;
 
     if (message.mentions.has(message.client.user!) && message.author.id === message.client.application.owner?.id) {
+      await message.channel.sendTyping();
       await this.runCode(message);
     }
 
     const tweetId = this.extractTweetId(message.content);
     if (tweetId) {
       if (await isTwitterAutoEmbedEnabled(message.guildId!)) {
+        await message.channel.sendTyping();
         await scrapeTweet(tweetId, message);
       }
     }
@@ -26,6 +28,7 @@ export class MessageListener extends Listener {
     const instagramUrl = this.extractInstagramUrl(message.content);
     if (instagramUrl) {
       if (await isInstagramAutoEmbedEnabled(message.guildId!)) {
+        await message.channel.sendTyping();
         await scrapeInstagram(instagramUrl, message);
       }
     }
