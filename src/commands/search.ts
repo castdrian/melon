@@ -114,7 +114,7 @@ export class SearchCommand extends Command {
         .map((match) => ({
           name: `${match.item.name} (${match.item.name_original}) ${
             (match.item as Idol)?.groups?.length > 0
-              ? ` - ${groups.find((g) => g.id === (match.item as Idol)?.groups[0])?.name}`
+              ? ` - ${groups.find((g) => g.id === (match.item as Idol)?.groups.slice(-1)[0])?.name}`
               : ''
           }`,
           value: match.item.id,
