@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "8a8f611b-d961-4762-b76e-e7499c4b0ae8",
+  "id": "c62c9919-ff6a-4ea1-81eb-83fe8ed3848a",
   "prevId": "e2738e86-4b9b-4b45-98f8-2f8621f8eb5a",
   "tables": {
     "greeting_preferences": {
@@ -82,6 +82,14 @@
         },
         "instagram_auto_embed": {
           "name": "instagram_auto_embed",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": false
+        },
+        "greeting_enabled": {
+          "name": "greeting_enabled",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,

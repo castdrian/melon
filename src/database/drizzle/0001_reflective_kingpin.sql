@@ -7,5 +7,6 @@ CREATE TABLE `greeting_preferences` (
 	FOREIGN KEY (`id`) REFERENCES `guild_preferences`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
+ALTER TABLE guild_preferences ADD `greeting_enabled` integer DEFAULT false NOT NULL;--> statement-breakpoint
 ALTER TABLE `guild_preferences` DROP COLUMN `greeting_channel_id`;--> statement-breakpoint
 ALTER TABLE `guild_preferences` DROP COLUMN `greeting_message`;

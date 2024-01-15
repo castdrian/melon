@@ -11,7 +11,12 @@ import * as schema from '@src/database/schema';
 ApplicationCommandRegistries.setDefaultGuildIds(config.devGuildId ? [config.devGuildId] : undefined);
 
 const client = new SapphireClient({
-  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent],
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMembers,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.MessageContent,
+  ],
 });
 
 const sqlite = new Database('melon.db');

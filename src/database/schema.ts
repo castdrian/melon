@@ -4,6 +4,7 @@ export const guildPreferences = sqliteTable('guild_preferences', {
   id: text('id').primaryKey(),
   twitterAutoEmbed: integer('twitter_auto_embed', { mode: 'boolean' }).notNull().default(false),
   instagramAutoEmbed: integer('instagram_auto_embed', { mode: 'boolean' }).notNull().default(false),
+  greetingEnabled: integer('greeting_enabled', { mode: 'boolean' }).notNull().default(false),
 });
 
 export const greetingPreferences = sqliteTable('greeting_preferences', {
