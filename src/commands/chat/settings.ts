@@ -2,9 +2,9 @@ import { Command } from '@sapphire/framework';
 import {
   ActionRowBuilder,
   ButtonBuilder,
+  ButtonInteraction,
   ButtonStyle,
   ChannelSelectMenuBuilder,
-  ChannelSelectMenuInteraction,
   ChannelType,
   CommandInteraction,
   MessageComponentInteraction,
@@ -18,6 +18,7 @@ import {
   GreetingSettings,
   getOrCreateGreetingSettings,
   getOrCreateGuildSettings,
+  removeGreetingSettings,
   updateGreetingSettings,
   updateGuildSettings,
 } from '@src/database/db';
@@ -110,20 +111,6 @@ export class SettingsCommand extends Command {
         await i.followUp({ content, embeds: embed ? [embed] : undefined, ephemeral: true });
       }
 
-      async function removeGreeting(i: MessageComponentInteraction) {
-        await updateGreetingSettings(interaction.guildId!, {
-          greetingChannelId: null,
-          greetingMessageContent: null,
-          greetingEmbedTitle: null,
-          greetingEmbedDescription: null,
-        });
-
-        await updateGuildSettings(interaction.guildId!, { greetingEnabled: false });
-
-        await i.update(await configureGreetingReply());
-        await interaction.editReply(await constructResponse());
-      }
-
       async function configureGreetingReply() {
         const greetingSettings = await getOrCreateGreetingSettings(interaction.guildId!);
 
@@ -133,6 +120,8 @@ export class SettingsCommand extends Command {
           greetingSettings.greetingEmbedTitle &&
           greetingSettings.greetingEmbedDescription
         );
+
+        const greetingChannelSelected = !!greetingSettings.greetingChannelId;
 
         const row = new ActionRowBuilder<ChannelSelectMenuBuilder>().addComponents(
           new ChannelSelectMenuBuilder()
@@ -144,6 +133,12 @@ export class SettingsCommand extends Command {
         );
 
         const buttonRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
+          new ButtonBuilder()
+            .setCustomId('configure_greeting_message')
+            .setLabel('Configure Message')
+            .setDisabled(!greetingChannelSelected)
+            .setEmoji(ButtonEmoji.SETTINGS)
+            .setStyle(ButtonStyle.Primary),
           new ButtonBuilder()
             .setCustomId('test_greeting')
             .setLabel('Test Greeting')
@@ -162,11 +157,8 @@ export class SettingsCommand extends Command {
         };
       }
 
-      async function greetingModal(i: ChannelSelectMenuInteraction) {
+      async function greetingModal(i: ButtonInteraction) {
         const settings = await getOrCreateGreetingSettings(interaction.guildId!);
-        const greetingChannelId = i.values[0];
-
-        await updateGreetingSettings(interaction.guildId!, { greetingChannelId });
 
         const modal = new ModalBuilder()
           .setCustomId('greeting_config_modal')
@@ -247,7 +239,13 @@ export class SettingsCommand extends Command {
           await i.reply(await configureGreetingReply());
         }
         if (i.customId === 'greeting_channel') {
-          await greetingModal(i as ChannelSelectMenuInteraction);
+          if (!i.isChannelSelectMenu()) return;
+          const greetingChannelId = i.values[0];
+          await updateGreetingSettings(interaction.guildId!, { greetingChannelId });
+          await i.update(await configureGreetingReply());
+        }
+        if (i.customId === 'configure_greeting_message') {
+          await greetingModal(i as ButtonInteraction);
         }
         if (i.customId === 'test_greeting') {
           await i.deferUpdate();
@@ -255,7 +253,12 @@ export class SettingsCommand extends Command {
           await testGreeting(i, settings);
         }
         if (i.customId === 'remove_greeting') {
-          await removeGreeting(i);
+          await i.deferUpdate();
+          await removeGreetingSettings(interaction.guildId!);
+          await updateGuildSettings(interaction.guildId!, { greetingEnabled: false });
+
+          await i.editReply(await configureGreetingReply());
+          await interaction.editReply(await constructResponse());
         }
       });
 

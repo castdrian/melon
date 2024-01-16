@@ -79,6 +79,10 @@ export async function updateGreetingSettings(guildId: string, newSettings: Parti
   return getOrCreateGreetingSettings(guildId);
 }
 
+export async function removeGreetingSettings(guildId: string) {
+  await db.delete(schema.greetingPreferences).where(eq(schema.greetingPreferences.id, guildId));
+}
+
 export async function isGreetingEnabled(guildId: string) {
   const settings = await getOrCreateGuildSettings(guildId);
   return settings.greetingEnabled;
