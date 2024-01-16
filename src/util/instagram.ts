@@ -13,7 +13,18 @@ export async function scrapeInstagram(instagramURL: string, message: Message) {
     const sessionId = (await getCookie(config.instagramUsername, config.instagramPassword)) as string;
     const ig = new igApi(sessionId);
 
-    const post = await ig.fetchPost(instagramURL);
+    async function retry<T>(promiseFn: () => Promise<T>, retries: number): Promise<T> {
+      try {
+        return await promiseFn();
+      } catch (error) {
+        if (retries > 0) {
+          return retry(promiseFn, retries - 1);
+        }
+        throw error;
+      }
+    }
+
+    const post = await retry(() => ig.fetchPost(instagramURL), 2);
     if (!post) {
       message.client.logger.info(`No post found for URL ${instagramURL}`);
       throw new Error(`No post found for URL ${instagramURL}`);
