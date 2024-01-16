@@ -42,12 +42,13 @@ export class InfoCommand extends Command {
         .catch(() => interaction.followUp({ content: 'Message modal timed out.', ephemeral: true }));
 
       if (submit instanceof ModalSubmitInteraction) {
-        await submit.deferUpdate();
+        await submit.deferReply({ ephemeral: true });
 
         const content = submit.fields.getTextInputValue('post_message_content');
-        const attachment = interaction.options.getAttachment('attachment');
+        const file = interaction.options.getAttachment('file')?.url;
 
-        await channel.send({ content, files: attachment ? [attachment] : undefined });
+        await channel.send({ content, files: file ? [file] : undefined });
+        await submit.deleteReply();
       }
     } catch (ex) {
       this.container.logger.error(ex);
@@ -68,8 +69,8 @@ export class InfoCommand extends Command {
         )
         .addAttachmentOption((option) =>
           option //
-            .setName('attachment')
-            .setDescription('attachment to send'),
+            .setName('file')
+            .setDescription('file to send'),
         )
         .setDefaultMemberPermissions(0),
     );

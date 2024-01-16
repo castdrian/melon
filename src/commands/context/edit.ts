@@ -42,10 +42,11 @@ export class EditCommand extends Command {
         .catch(() => interaction.followUp({ content: 'Message modal timed out.', ephemeral: true }));
 
       if (submit instanceof ModalSubmitInteraction) {
-        await submit.deferUpdate();
+        await submit.deferReply({ ephemeral: true });
 
         const content = submit.fields.getTextInputValue('edit_message_content');
         await interaction.targetMessage.edit(content);
+        await submit.deleteReply();
       }
     } catch (ex) {
       this.container.logger.error(ex);
