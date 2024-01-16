@@ -43,8 +43,11 @@ export class InfoCommand extends Command {
 
       if (submit instanceof ModalSubmitInteraction) {
         await submit.deferUpdate();
+
         const content = submit.fields.getTextInputValue('post_message_content');
-        await channel.send({ content });
+        const attachment = interaction.options.getAttachment('attachment');
+
+        await channel.send({ content, files: attachment ? [attachment] : undefined });
       }
     } catch (ex) {
       this.container.logger.error(ex);
@@ -62,6 +65,11 @@ export class InfoCommand extends Command {
             .setDescription('channel to send message to')
             .setRequired(true)
             .addChannelTypes(ChannelType.GuildText, ChannelType.GuildAnnouncement),
+        )
+        .addAttachmentOption((option) =>
+          option //
+            .setName('attachment')
+            .setDescription('attachment to send'),
         )
         .setDefaultMemberPermissions(0),
     );
