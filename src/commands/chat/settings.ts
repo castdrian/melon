@@ -93,10 +93,12 @@ export class SettingsCommand extends Command {
         const { greetingMessageContent, greetingEmbedTitle, greetingEmbedDescription } = settings;
 
         const content = greetingMessageContent?.replace(/{{member}}/g, i.user.toString());
+        const title = greetingEmbedTitle?.replace(/{{guild}}/g, i.guild!.toString());
+
         const embed =
           greetingEmbedTitle && greetingEmbedDescription
             ? {
-                title: greetingEmbedTitle,
+                title,
                 description: greetingEmbedDescription,
                 thumbnail: {
                   url: i.user.displayAvatarURL(),
@@ -185,7 +187,7 @@ export class SettingsCommand extends Command {
                 .setCustomId('greeting_embed_title')
                 .setStyle(TextInputStyle.Short)
                 .setLabel('Embed Title')
-                .setPlaceholder('Welcome to the server!')
+                .setPlaceholder('Welcome to {{guild}}!')
                 .setRequired(true)
                 .setMaxLength(256)
                 .setValue(settings.greetingEmbedTitle ?? ''),

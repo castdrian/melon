@@ -9,7 +9,7 @@ export class IdolCommand extends Command {
       if (!interaction.isMessageContextMenuCommand && !(interaction.targetMessage instanceof Message)) return;
 
       const __dirname = path.dirname(new URL(import.meta.url).pathname);
-      const filePath = path.join(__dirname, '..', '..', 'media', 'IDOL.mp4');
+      const filePath = path.join(__dirname, '..', '..', '..', 'media', 'IDOL.mp4');
 
       await interaction.reply({ content: interaction.targetMessage.author.toString(), files: [filePath] });
     } catch (ex) {

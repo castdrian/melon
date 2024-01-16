@@ -13,10 +13,12 @@ export class GuildMemberListener extends Listener {
     if (!channel?.isTextBased()) return;
 
     const content = greetingMessageContent?.replace(/{{member}}/g, member.toString());
+    const title = greetingEmbedTitle?.replace(/{{guild}}/g, member.guild.toString());
+
     const embed =
       greetingEmbedTitle && greetingEmbedDescription
         ? {
-            title: greetingEmbedTitle,
+            title,
             description: greetingEmbedDescription,
             thumbnail: {
               url: member.user.displayAvatarURL(),

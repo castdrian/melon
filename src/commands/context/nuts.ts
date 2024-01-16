@@ -8,8 +8,9 @@ export class DeezNutsCommand extends Command {
     try {
       if (!interaction.isMessageContextMenuCommand && !(interaction.targetMessage instanceof Message)) return;
       const __dirname = path.dirname(new URL(import.meta.url).pathname);
-      const one = path.join(__dirname, '..', '..', 'media', 'DEEZNUTS.mov');
-      const two = path.join(__dirname, '..', '..', 'media', 'RYUJINDN.mp4');
+      console.log(__dirname);
+      const one = path.join(__dirname, '..', '..', '..', 'media', 'DEEZNUTS.mov');
+      const two = path.join(__dirname, '..', '..', '..', 'media', 'RYUJINDN.mp4');
 
       const filePath = Math.random() > 0.5 ? one : two;
 
