@@ -207,7 +207,7 @@ export class SettingsCommand extends Command {
         const submit = await i
           .awaitModalSubmit({
             filter: (int) => int.customId === 'greeting_config_modal',
-            time: 10000,
+            time: 60000,
           })
           .catch(() => i.followUp({ content: 'Config modal timed out.', ephemeral: true }));
 
