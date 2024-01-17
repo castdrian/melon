@@ -1,6 +1,8 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { Listener, type ListenerOptions } from '@sapphire/framework';
-import { ActivityType, Client } from 'discord.js';
+import { ActivityType, Client, User } from 'discord.js';
+
+import { config } from '@root/src/config';
 
 @ApplyOptions<ListenerOptions>({ once: true })
 export class ReadyListener extends Listener {
@@ -9,6 +11,10 @@ export class ReadyListener extends Listener {
 
     const { username, id } = client.user!;
     this.container.logger.info(`Successfully logged in as ${username} (${id})`);
+
+    if (!config.devGuildId && client.application?.owner instanceof User) {
+      await client.application.owner.send(`Successfully logged in as ${username} (${id})`);
+    }
 
     const updateActivity = () => {
       client.user?.setActivity({ type: ActivityType.Custom, state: 'being melon', name: 'melon' });
