@@ -10,6 +10,7 @@ import {
   MessageComponentInteraction,
   ModalBuilder,
   ModalSubmitInteraction,
+  RoleSelectMenuBuilder,
   TextInputBuilder,
   TextInputStyle,
 } from 'discord.js';
@@ -73,6 +74,15 @@ export class SettingsCommand extends Command {
             .setEmoji(settings.greetingEnabled ? ButtonEmoji.ENABLED : ButtonEmoji.DISABLED)
             .setStyle(ButtonStyle.Primary),
           new ButtonBuilder()
+            .setCustomId('joinrole')
+            .setLabel('Apply Join Role')
+            .setDisabled(disabled || !!!settings.joinRoleId)
+            .setEmoji(settings.joinRoleEnabled ? ButtonEmoji.ENABLED : ButtonEmoji.DISABLED)
+            .setStyle(ButtonStyle.Primary),
+        );
+
+        const alsoRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
+          new ButtonBuilder()
             .setCustomId('configure_greeting')
             .setLabel('Configure Greeting')
             .setDisabled(disabled)
@@ -80,7 +90,17 @@ export class SettingsCommand extends Command {
             .setStyle(ButtonStyle.Secondary),
         );
 
-        return { components: [row] };
+        const anotherRow = new ActionRowBuilder<RoleSelectMenuBuilder>().addComponents(
+          new RoleSelectMenuBuilder()
+            .setCustomId('joinrole_select')
+            .setPlaceholder('Select a join role')
+            .setDisabled(disabled)
+            .addDefaultRoles(settings.joinRoleId ? [settings.joinRoleId] : [])
+            .setMinValues(1)
+            .setMaxValues(1),
+        );
+
+        return { components: [row, alsoRow, anotherRow] };
       }
 
       const collector = interaction.channel!.createMessageComponentCollector({
@@ -272,6 +292,19 @@ export class SettingsCommand extends Command {
 
           await i.editReply(await configureGreetingReply());
           await interaction.editReply(await constructResponse());
+        }
+        if (i.customId === 'joinrole') {
+          const settings = await getOrCreateGuildSettings(interaction.guildId!);
+          const joinRoleEnabled = !settings.joinRoleEnabled;
+
+          await updateGuildSettings(interaction.guildId!, { joinRoleEnabled });
+          await i.update(await constructResponse());
+        }
+        if (i.customId === 'joinrole_select') {
+          if (!i.isRoleSelectMenu()) return;
+          const joinRoleId = i.values[0];
+          await updateGuildSettings(interaction.guildId!, { joinRoleId });
+          await i.update(await constructResponse());
         }
       });
 

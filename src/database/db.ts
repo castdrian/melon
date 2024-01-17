@@ -95,3 +95,8 @@ export async function isGreetingEnabled(guildId: string) {
   const settings = await getOrCreateGuildSettings(guildId);
   return settings.greetingEnabled;
 }
+
+export async function isJoinRoleEnabled(guildId: string) {
+  const settings = await getOrCreateGuildSettings(guildId);
+  return settings.joinRoleEnabled;
+}
