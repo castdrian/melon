@@ -50,6 +50,11 @@ export async function isInstagramAutoEmbedEnabled(guildId: string) {
   return settings.instagramAutoEmbed;
 }
 
+export async function isTikTokAutoEmbedEnabled(guildId: string) {
+  const settings = await getOrCreateGuildSettings(guildId);
+  return settings.tiktokAutoEmbed;
+}
+
 export async function getOrCreateGreetingSettings(guildId: string) {
   const existingSettings = await db
     .select()

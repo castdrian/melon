@@ -61,6 +61,12 @@ export class SettingsCommand extends Command {
             .setEmoji(settings.instagramAutoEmbed ? ButtonEmoji.ENABLED : ButtonEmoji.DISABLED)
             .setStyle(ButtonStyle.Primary),
           new ButtonBuilder()
+            .setCustomId('tiktok')
+            .setLabel('Embed TikTok Posts')
+            .setDisabled(disabled)
+            .setEmoji(settings.tiktokAutoEmbed ? ButtonEmoji.ENABLED : ButtonEmoji.DISABLED)
+            .setStyle(ButtonStyle.Primary),
+          new ButtonBuilder()
             .setCustomId('greeting')
             .setLabel('Member Greeting')
             .setDisabled(disabled || !greetingConfigured)
@@ -233,6 +239,13 @@ export class SettingsCommand extends Command {
           const greetingEnabled = !settings.greetingEnabled;
 
           await updateGuildSettings(interaction.guildId!, { greetingEnabled });
+          await i.update(await constructResponse());
+        }
+        if (i.customId === 'tiktok') {
+          const settings = await getOrCreateGuildSettings(interaction.guildId!);
+          const tiktokEnabled = !settings.tiktokAutoEmbed;
+
+          await updateGuildSettings(interaction.guildId!, { tiktokAutoEmbed: tiktokEnabled });
           await i.update(await constructResponse());
         }
         if (i.customId === 'configure_greeting') {

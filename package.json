@@ -30,6 +30,7 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
+    "@prevter/tiktok-scraper": "^1.0.1",
     "@sapphire/decorators": "^6.0.2",
     "@sapphire/discord.js-utilities": "^7.1.3",
     "@sapphire/framework": "latest",
