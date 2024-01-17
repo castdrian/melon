@@ -25,7 +25,10 @@ export async function getOrCreateGuildSettings(guildId: string) {
     id: guildId,
     twitterAutoEmbed: false,
     instagramAutoEmbed: false,
+    tiktokAutoEmbed: false,
     greetingEnabled: false,
+    joinRoleEnabled: false,
+    joinRoleId: null,
   };
 
   const createdSettings = await db.insert(schema.guildPreferences).values(newSettings).returning();
