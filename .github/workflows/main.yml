@@ -1,4 +1,4 @@
-name: Bump Version
+name: deploy melon
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
       - '**.github/workflows/*'
 
 jobs:
-  bump:
+  deploy:
     permissions:
         contents: write
     runs-on: ubuntu-latest
@@ -25,3 +25,11 @@ jobs:
           skip-tag:  'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Deploy melon
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          script: cd melon && git pull && sudo docker compose up --build
