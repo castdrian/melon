@@ -17,9 +17,15 @@ export class MessageListener extends Listener {
     if (message.author.bot) return;
     if (message.channel.type === ChannelType.DM) return;
 
+    if (message.content === `<@${message.client.user!.id}>`) {
+      await message.reply({ files: [message.client.user.displayAvatarURL()] }).catch(() => null);
+    }
+
     if (message.mentions.has(message.client.user!) && message.author.id === message.client.application.owner?.id) {
-      await message.channel.sendTyping();
-      await this.runCode(message);
+      if (message.content.replace(`<@${message.client.user!.id}>`, '').trim().length > 0) {
+        await message.channel.sendTyping();
+        await this.runCode(message);
+      }
     }
 
     const tweetId = this.extractTweetId(message.content);
