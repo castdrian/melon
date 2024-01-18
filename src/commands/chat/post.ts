@@ -1,6 +1,9 @@
+import { canSendMessages } from '@sapphire/discord.js-utilities';
 import { Command } from '@sapphire/framework';
 import {
   ActionRowBuilder,
+  ButtonBuilder,
+  ButtonStyle,
   ChannelType,
   CommandInteraction,
   ModalBuilder,
@@ -18,6 +21,16 @@ export class InfoCommand extends Command {
         ChannelType.GuildAnnouncement,
       ]);
 
+      if (!canSendMessages(channel))
+        return interaction.reply({ content: 'melon cannot send messages to that channel.', ephemeral: true });
+
+      const file = interaction.options.getAttachment('file')?.url;
+
+      const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+        new ButtonBuilder().setCustomId('message').setLabel('Add Message').setStyle(ButtonStyle.Primary),
+        new ButtonBuilder().setCustomId('file').setLabel('Send File Only').setStyle(ButtonStyle.Primary),
+      );
+
       const modal = new ModalBuilder()
         .setCustomId('post_message_modal')
         .setTitle(`Send message to ${channel.name}`)
@@ -32,23 +45,62 @@ export class InfoCommand extends Command {
           ),
         );
 
-      await interaction.showModal(modal);
+      if (file) {
+        await interaction.reply({ components: [row], ephemeral: true });
 
-      const submit = await interaction
-        .awaitModalSubmit({
-          filter: (i) => i.customId === 'post_message_modal',
+        const collector = interaction.channel!.createMessageComponentCollector({
+          filter: (i) => i.user.id === interaction.user.id,
           time: 60000,
-        })
-        .catch(() => interaction.followUp({ content: 'Message modal timed out.', ephemeral: true }));
+        });
 
-      if (submit instanceof ModalSubmitInteraction) {
-        await submit.deferReply({ ephemeral: true });
+        collector.on('collect', async (i) => {
+          if (i.customId === 'message') {
+            await i.showModal(modal);
 
-        const content = submit.fields.getTextInputValue('post_message_content');
-        const file = interaction.options.getAttachment('file')?.url;
+            const submit = await i
+              .awaitModalSubmit({
+                filter: (int) => int.customId === 'post_message_modal',
+                time: 60000,
+              })
+              .catch(() => interaction.followUp({ content: 'Message modal timed out.', ephemeral: true }));
 
-        await channel.send({ content, files: file ? [file] : undefined });
-        await submit.deleteReply();
+            if (submit instanceof ModalSubmitInteraction) {
+              await submit.deferReply({ ephemeral: true });
+
+              const content = submit.fields.getTextInputValue('post_message_content');
+
+              await channel.send({ content, files: file ? [file] : undefined });
+              await submit.deleteReply().catch(() => null);
+              await i.deleteReply().catch(() => null);
+            }
+          }
+          if (i.customId === 'file') {
+            await i.deferUpdate();
+            await channel.send({ files: file ? [file] : undefined });
+            await i.deleteReply().catch(() => null);
+          }
+        });
+
+        collector.on('end', async () => {
+          await interaction.deleteReply().catch(() => null);
+        });
+      } else {
+        await interaction.showModal(modal);
+
+        const submit = await interaction
+          .awaitModalSubmit({
+            filter: (i) => i.customId === 'post_message_modal',
+            time: 60000,
+          })
+          .catch(() => interaction.followUp({ content: 'Message modal timed out.', ephemeral: true }));
+
+        if (submit instanceof ModalSubmitInteraction) {
+          await submit.deferReply({ ephemeral: true });
+
+          const content = submit.fields.getTextInputValue('post_message_content');
+          await channel.send(content);
+          await submit.deleteReply().catch(() => null);
+        }
       }
     } catch (ex) {
       this.container.logger.error(ex);
