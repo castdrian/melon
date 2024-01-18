@@ -24,6 +24,7 @@ export class InfoCommand extends Command {
       if (!canSendMessages(channel))
         return interaction.reply({ content: 'melon cannot send messages to that channel.', ephemeral: true });
 
+      const mentionsDisabled = interaction.options.getBoolean('mentions') ?? false;
       const file = interaction.options.getAttachment('file')?.url;
 
       const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
@@ -69,14 +70,21 @@ export class InfoCommand extends Command {
 
               const content = submit.fields.getTextInputValue('post_message_content');
 
-              await channel.send({ content, files: file ? [file] : undefined });
+              await channel.send({
+                content,
+                files: file ? [file] : undefined,
+                allowedMentions: mentionsDisabled ? { parse: [] } : undefined,
+              });
               await submit.deleteReply().catch(() => null);
               await i.deleteReply().catch(() => null);
             }
           }
           if (i.customId === 'file') {
             await i.deferUpdate();
-            await channel.send({ files: file ? [file] : undefined });
+            await channel.send({
+              files: file ? [file] : undefined,
+              allowedMentions: mentionsDisabled ? { parse: [] } : undefined,
+            });
             await i.deleteReply().catch(() => null);
           }
         });
@@ -98,7 +106,10 @@ export class InfoCommand extends Command {
           await submit.deferReply({ ephemeral: true });
 
           const content = submit.fields.getTextInputValue('post_message_content');
-          await channel.send(content);
+          await channel.send({
+            content,
+            allowedMentions: mentionsDisabled ? { parse: [] } : undefined,
+          });
           await submit.deleteReply().catch(() => null);
         }
       }
@@ -118,6 +129,11 @@ export class InfoCommand extends Command {
             .setDescription('channel to send message to')
             .setRequired(true)
             .addChannelTypes(ChannelType.GuildText, ChannelType.GuildAnnouncement),
+        )
+        .addBooleanOption((option) =>
+          option //
+            .setName('mentions')
+            .setDescription('disable mentions'),
         )
         .addAttachmentOption((option) =>
           option //

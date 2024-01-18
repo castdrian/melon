@@ -6,9 +6,8 @@ import kpop, { Group, Idol } from 'kpopnet.json';
 export class SearchCommand extends Command {
   public override async chatInputRun(interaction: CommandInteraction) {
     try {
-      const { value } = interaction.options.get('query', true);
-      if (!value) return interaction.reply('Please provide a search query.');
-      if (typeof value !== 'string') return interaction.reply('Please provide a valid search query.');
+      if (!interaction.isChatInputCommand()) return;
+      const value = interaction.options.getString('query', true);
 
       const { idols, groups } = kpop;
 
