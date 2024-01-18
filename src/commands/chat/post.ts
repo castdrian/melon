@@ -24,7 +24,7 @@ export class InfoCommand extends Command {
       if (!canSendMessages(channel))
         return interaction.reply({ content: 'melon cannot send messages to that channel.', ephemeral: true });
 
-      const mentionsDisabled = interaction.options.getBoolean('mentions') ?? false;
+      const mentionsDisabled = interaction.options.getBoolean('disable_mentions') ?? false;
       const file = interaction.options.getAttachment('file')?.url;
 
       const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
@@ -132,7 +132,7 @@ export class InfoCommand extends Command {
         )
         .addBooleanOption((option) =>
           option //
-            .setName('mentions')
+            .setName('disable_mentions')
             .setDescription('disable mentions'),
         )
         .addAttachmentOption((option) =>
