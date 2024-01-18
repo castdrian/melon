@@ -111,14 +111,16 @@ export class SearchCommand extends Command {
         returnMatchData: true,
         limit: 5,
       })
-        .map((match) => ({
-          name: `${match.item.name} (${match.item.name_original}) ${
-            (match.item as Idol)?.groups?.length > 0
-              ? ` - ${groups.find((g) => g.id === (match.item as Idol)?.groups.slice(-1)[0])?.name}`
-              : ''
-          }`,
-          value: match.item.id,
-        }))
+        .map((match) => {
+          const idol = match.item as Idol;
+          const group =
+            groups.find((g) => g.members.some((member) => member.idol_id === idol.id && member.current)) ??
+            groups.find((g) => g.id === idol.groups?.[0]);
+          return {
+            name: `${match.item.name} (${match.item.name_original}) ${group ? `- ${group.name}` : ''}`,
+            value: match.item.id,
+          };
+        })
         .splice(0, 5);
 
       await interaction.respond(response);
