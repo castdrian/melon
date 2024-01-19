@@ -1,7 +1,8 @@
 import { Command } from '@sapphire/framework';
 import { AutocompleteInteraction, CommandInteraction, time } from 'discord.js';
 import { search } from 'fast-fuzzy';
-import kpop, { Group, Idol } from 'kpopnet.json';
+import { getKoreanRegex } from 'ko-fuzzy';
+import kpop, { Idol } from 'kpopnet.json';
 
 export class SearchCommand extends Command {
   public override async chatInputRun(interaction: CommandInteraction) {
@@ -11,29 +12,10 @@ export class SearchCommand extends Command {
 
       const { idols, groups } = kpop;
 
-      let idol = idols.find((i) => i.id === value);
-      let group = groups.find((g) => g.id === value);
+      const idol = idols.find((i) => i.id === value);
+      const group = groups.find((g) => g.id === value);
 
       if (!idol && !group) {
-        const fuzzySearch = search(value, [...idols, ...groups], {
-          keySelector: (item) => {
-            if ('real_name' in item) {
-              return [item.name, item.real_name, item.real_name_original, item.name_alias, item.name_original].join(
-                ' ',
-              );
-            }
-            return [item.name, item.name_alias, item.name_original].join(' ');
-          },
-        });
-
-        if (fuzzySearch.length > 0) {
-          const match = fuzzySearch[0];
-          if ('real_name' in match) {
-            idol = match as Idol;
-          } else {
-            group = match as Group;
-          }
-        }
         return interaction.reply('Could not find an idol or group with that ID.');
       }
 
@@ -100,27 +82,52 @@ export class SearchCommand extends Command {
       const { value } = interaction.options.getFocused(true);
       const { idols, groups } = kpop;
 
-      const response = search(value, [...idols, ...groups], {
-        keySelector: (item) => {
+      const isKorean = /[\u1100-\u11FF\uAC00-\uD7AF\uA960-\uA97F\uD7B0-\uD7FF]/.test(value);
+      let matches = [];
+
+      if (isKorean) {
+        const regex = getKoreanRegex(value, { consonantMatch: true, fuzzy: true });
+        matches = [...idols, ...groups].filter((item) => {
           if ('real_name' in item) {
-            return [item.name, item.real_name, item.real_name_original, item.name_alias, item.name_original].join(' ');
+            return (
+              (item.name && regex.test(item.name)) ||
+              (item.real_name && regex.test(item.real_name)) ||
+              (item.name_alias && regex.test(item.name_alias)) ||
+              (item.name_original && regex.test(item.name_original)) ||
+              (item.real_name_original && regex.test(item.real_name_original))
+            );
           }
-          return [item.name, item.name_alias, item.name_original].join(' ');
-        },
-        returnMatchData: true,
-        limit: 5,
-      })
-        .map((match) => {
-          const idol = match.item as Idol;
-          const group =
-            groups.find((g) => g.members.some((member) => member.idol_id === idol.id && member.current)) ??
-            groups.find((g) => g.id === idol.groups?.[0]);
-          return {
-            name: `${match.item.name} (${match.item.name_original}) ${group ? `- ${group.name}` : ''}`,
-            value: match.item.id,
-          };
-        })
-        .splice(0, 5);
+          return (
+            (item.name && regex.test(item.name)) ||
+            (item.name_alias && regex.test(item.name_alias)) ||
+            (item.name_original && regex.test(item.name_original))
+          );
+        });
+      } else {
+        matches = search(value, [...idols, ...groups], {
+          keySelector: (item) => {
+            if ('real_name' in item) {
+              return [item.name, item.real_name, item.real_name_original, item.name_alias, item.name_original].join(
+                ' ',
+              );
+            }
+            return [item.name, item.name_alias, item.name_original].join(' ');
+          },
+          returnMatchData: true,
+          limit: 5,
+        }).map((match) => match.item);
+      }
+
+      const response = matches.slice(0, 5).map((item) => {
+        const idol = item as Idol;
+        const group =
+          groups.find((g) => g.members.some((member) => member.idol_id === idol.id && member.current)) ??
+          groups.find((g) => g.id === idol.groups?.[0]);
+        return {
+          name: `${idol.name} (${idol.name_original}) ${group ? `- ${group.name}` : ''}`,
+          value: idol.id,
+        };
+      });
 
       await interaction.respond(response);
     } catch (ex) {

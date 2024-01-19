@@ -40,6 +40,7 @@
     "drizzle-orm": "^0.29.3",
     "fast-fuzzy": "^1.12.0",
     "insta-fetcher": "^1.3.27",
+    "ko-fuzzy": "^1.0.0",
     "kpopnet.json": "^2.0.5",
     "neat-config": "^2.0.0",
     "systeminformation": "^5.21.22",
