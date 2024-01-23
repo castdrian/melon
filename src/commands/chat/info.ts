@@ -5,6 +5,7 @@ import { cpu, mem, osInfo } from 'systeminformation';
 import { version as tsver } from 'typescript';
 
 import pkg from '@root/package.json';
+import { MELON_COLOR } from '@root/src/config';
 
 export class InfoCommand extends Command {
   public override async chatInputRun(interaction: CommandInteraction) {
@@ -28,7 +29,7 @@ export class InfoCommand extends Command {
         thumbnail: {
           url: this.container.client.user!.displayAvatarURL(),
         },
-        color: 0xd23b68,
+        color: MELON_COLOR,
       };
 
       const row = new ActionRowBuilder<ButtonBuilder>().addComponents(

@@ -1,8 +1,10 @@
 import { Command } from '@sapphire/framework';
-import { AutocompleteInteraction, CommandInteraction, time } from 'discord.js';
+import { AutocompleteInteraction, CommandInteraction, strikethrough, time } from 'discord.js';
 import { search } from 'fast-fuzzy';
 import { getKoreanRegex } from 'ko-fuzzy';
 import kpop, { Idol } from 'kpopnet.json';
+
+import { MELON_COLOR } from '@root/src/config';
 
 export class SearchCommand extends Command {
   public override async chatInputRun(interaction: CommandInteraction) {
@@ -33,13 +35,20 @@ export class SearchCommand extends Command {
             idol.weight ? `\n**Weight:** ${idol.weight} KG` : ''
           }${
             idol.groups.length > 0
-              ? `\n\n**Groups:**\n${idol.groups.map((id) => groups.find((grp) => grp.id === id)!.name).join('\n')}`
+              ? `\n**Groups:** ${idol.groups
+                  .map((id) => {
+                    const g = groups.find((grp) => grp.id === id)!;
+                    return g.members.some((member) => member.idol_id === idol.id && member.current)
+                      ? g.name
+                      : strikethrough(g.name);
+                  })
+                  .join(' ')}`
               : ''
           }`,
           thumbnail: {
             url: idol.thumb_url!,
           },
-          color: 0xd23b68,
+          color: MELON_COLOR,
         };
         return interaction.reply({ embeds: [embed] });
       }
@@ -58,16 +67,19 @@ export class SearchCommand extends Command {
                   'R',
                 )})`
               : ''
-          }\n\n**Members:**\n${group.members
+          }\n**Members:**\n${group.members
             .map((member) => {
               const m = idols.find((i) => i.id === member.idol_id)!;
-              return `${m.name} (${m.name_original})`;
+              const memberName = member.current
+                ? `${m.name} (${m.name_original})`
+                : strikethrough(`${m.name} (${m.name_original})`);
+              return memberName;
             })
             .join('\n')}`,
           thumbnail: {
             url: group.thumb_url!,
           },
-          color: 0xd23b68,
+          color: MELON_COLOR,
         };
         return interaction.reply({ embeds: [embed] });
       }
@@ -120,9 +132,7 @@ export class SearchCommand extends Command {
 
       const response = matches.slice(0, 5).map((item) => {
         const idol = item as Idol;
-        const group =
-          groups.find((g) => g.members.some((member) => member.idol_id === idol.id && member.current)) ??
-          groups.find((g) => g.id === idol.groups?.[0]);
+        const group = groups.find((g) => g.members.some((member) => member.idol_id === idol.id && member.current));
         return {
           name: `${idol.name} (${idol.name_original}) ${group ? `- ${group.name}` : ''}`,
           value: idol.id,

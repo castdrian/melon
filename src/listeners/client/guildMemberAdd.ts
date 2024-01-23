@@ -1,6 +1,7 @@
 import { Listener } from '@sapphire/framework';
 import { GuildMember } from 'discord.js';
 
+import { MELON_COLOR } from '@root/src/config';
 import { getOrCreateGreetingSettings, isGreetingEnabled } from '@root/src/database/db';
 
 export class GuildMemberListener extends Listener {
@@ -23,7 +24,7 @@ export class GuildMemberListener extends Listener {
             thumbnail: {
               url: member.user.displayAvatarURL(),
             },
-            color: 0xd23b68,
+            color: MELON_COLOR,
           }
         : null;
 

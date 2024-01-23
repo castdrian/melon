@@ -2,6 +2,8 @@ import { PaginatedMessage } from '@sapphire/discord.js-utilities';
 import { Command } from '@sapphire/framework';
 import { CommandInteraction, time } from 'discord.js';
 
+import { MELON_COLOR } from '@root/src/config';
+
 export class EventsCommand extends Command {
   public override async chatInputRun(interaction: CommandInteraction) {
     try {
@@ -32,7 +34,7 @@ export class EventsCommand extends Command {
               event.url
             })`,
           })),
-          color: 0xd23b68,
+          color: MELON_COLOR,
         };
 
         paginatedMessage.addPageEmbed(embed);

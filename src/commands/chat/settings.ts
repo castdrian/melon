@@ -15,6 +15,7 @@ import {
   TextInputStyle,
 } from 'discord.js';
 
+import { MELON_COLOR } from '@root/src/config';
 import {
   GreetingSettings,
   getOrCreateGreetingSettings,
@@ -130,7 +131,7 @@ export class SettingsCommand extends Command {
                 thumbnail: {
                   url: i.user.displayAvatarURL(),
                 },
-                color: 0xd23b68,
+                color: MELON_COLOR,
               }
             : null;
 

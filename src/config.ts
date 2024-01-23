@@ -15,3 +15,5 @@ export const config = createConfigLoader()
   .addFromEnvironment(prefix)
   .addZodSchema(schema)
   .load();
+
+export const MELON_COLOR = 0xd23b68;
