@@ -18,7 +18,7 @@ export class MessageListener extends Listener {
     if (message.channel.type === ChannelType.DM) return;
 
     if (message.content === `<@${message.client.user!.id}>`) {
-      await message.reply({ files: [message.client.user.displayAvatarURL()] }).catch(() => null);
+      await message.reply({ files: [message.client.user.displayAvatarURL({ size: 256 })] }).catch(() => null);
     }
 
     if (message.mentions.has(message.client.user!) && message.author.id === message.client.application.owner?.id) {
