@@ -2,7 +2,7 @@ import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 
 export const guildPreferences = sqliteTable('guild_preferences', {
   id: text('id').primaryKey(),
-  twitterAutoEmbed: integer('twitter_auto_embed', { mode: 'boolean' }).notNull().default(false),
+  XAutoEmbed: integer('x_auto_embed', { mode: 'boolean' }).notNull().default(false),
   instagramAutoEmbed: integer('instagram_auto_embed', { mode: 'boolean' }).notNull().default(false),
   tiktokAutoEmbed: integer('tiktok_auto_embed', { mode: 'boolean' }).notNull().default(false),
   greetingEnabled: integer('greeting_enabled', { mode: 'boolean' }).notNull().default(false),

@@ -51,10 +51,10 @@ export class SettingsCommand extends Command {
 
         const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
           new ButtonBuilder()
-            .setCustomId('twitter')
-            .setLabel('Embed Tweets')
+            .setCustomId('x')
+            .setLabel('Embed X Posts')
             .setDisabled(disabled)
-            .setEmoji(settings.twitterAutoEmbed ? ButtonEmoji.ENABLED : ButtonEmoji.DISABLED)
+            .setEmoji(settings.XAutoEmbed ? ButtonEmoji.ENABLED : ButtonEmoji.DISABLED)
             .setStyle(ButtonStyle.Primary),
           new ButtonBuilder()
             .setCustomId('instagram')
@@ -111,7 +111,7 @@ export class SettingsCommand extends Command {
 
       async function updateEmbedSettings(customId: string) {
         const settings = await getOrCreateGuildSettings(interaction.guildId!);
-        const settingKey = customId === 'twitter' ? 'twitterAutoEmbed' : 'instagramAutoEmbed';
+        const settingKey = customId === 'x' ? 'XAutoEmbed' : 'instagramAutoEmbed';
         const settingValue = !settings[settingKey];
 
         await updateGuildSettings(interaction.guildId!, { [settingKey]: settingValue });
@@ -251,7 +251,7 @@ export class SettingsCommand extends Command {
       }
 
       collector.on('collect', async (i) => {
-        if (i.customId === 'twitter' || i.customId === 'instagram') {
+        if (i.customId === 'x' || i.customId === 'instagram') {
           await updateEmbedSettings(i.customId);
           await i.update(await constructResponse());
         }

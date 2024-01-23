@@ -21,9 +21,9 @@ export async function getOrCreateGuildSettings(guildId: string) {
     return existingSettings[0];
   }
 
-  const newSettings = {
+  const newSettings: GuildSettings = {
     id: guildId,
-    twitterAutoEmbed: false,
+    XAutoEmbed: false,
     instagramAutoEmbed: false,
     tiktokAutoEmbed: false,
     greetingEnabled: false,
@@ -40,9 +40,9 @@ export async function updateGuildSettings(guildId: string, newSettings: Partial<
   return getOrCreateGuildSettings(guildId);
 }
 
-export async function isTwitterAutoEmbedEnabled(guildId: string) {
+export async function isXAutoEmbedEnabled(guildId: string) {
   const settings = await getOrCreateGuildSettings(guildId);
-  return settings.twitterAutoEmbed;
+  return settings.XAutoEmbed;
 }
 
 export async function isInstagramAutoEmbedEnabled(guildId: string) {

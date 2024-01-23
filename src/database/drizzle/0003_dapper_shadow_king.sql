@@ -1,0 +1,1 @@
+ALTER TABLE `guild_preferences` RENAME COLUMN `twitter_auto_embed` TO `x_auto_embed`;

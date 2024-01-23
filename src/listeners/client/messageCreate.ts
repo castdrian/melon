@@ -3,14 +3,10 @@ import { createContext, runInContext } from 'node:vm';
 import { Listener } from '@sapphire/framework';
 import { ChannelType, Message, codeBlock } from 'discord.js';
 
-import {
-  isInstagramAutoEmbedEnabled,
-  isTikTokAutoEmbedEnabled,
-  isTwitterAutoEmbedEnabled,
-} from '@root/src/database/db';
+import { isInstagramAutoEmbedEnabled, isTikTokAutoEmbedEnabled, isXAutoEmbedEnabled } from '@root/src/database/db';
 import { scrapeInstagram } from '@root/src/util/instagram';
 import { scrapeTikTok } from '@root/src/util/tiktok';
-import { scrapeTweet } from '@root/src/util/twitter';
+import { scrapeX } from '@root/src/util/x';
 
 export class MessageListener extends Listener {
   public async run(message: Message) {
@@ -28,11 +24,11 @@ export class MessageListener extends Listener {
       }
     }
 
-    const tweetId = this.extractTweetId(message.content);
+    const tweetId = this.extractXId(message.content);
     if (tweetId) {
-      if (await isTwitterAutoEmbedEnabled(message.guildId!)) {
+      if (await isXAutoEmbedEnabled(message.guildId!)) {
         await message.channel.sendTyping();
-        await scrapeTweet(tweetId, message);
+        await scrapeX(tweetId, message);
       }
     }
 
@@ -53,7 +49,7 @@ export class MessageListener extends Listener {
     }
   }
 
-  private extractTweetId(text: string): string | null {
+  private extractXId(text: string): string | null {
     const regex = /https?:\/\/(?:www\.)?(?:twitter\.com|x\.com)\/\w+\/status\/(\d+)/;
     const matches = regex.exec(text);
     return matches ? matches[1] : null;
