@@ -24,11 +24,11 @@ export class MessageListener extends Listener {
       }
     }
 
-    const tweetId = this.extractXId(message.content);
-    if (tweetId) {
+    const XId = this.extractXId(message.content);
+    if (XId) {
       if (await isXAutoEmbedEnabled(message.guildId!)) {
         await message.channel.sendTyping();
-        await scrapeX(tweetId, message);
+        await scrapeX(XId, message);
       }
     }
 
