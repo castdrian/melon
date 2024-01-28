@@ -1,4 +1,4 @@
-import { type BufferResolvable, type Message, time } from 'discord.js';
+import { type BufferResolvable, type Message, escapeMarkdown, time } from 'discord.js';
 import { getCookie, igApi } from 'insta-fetcher';
 
 import { config } from '@src/config';
@@ -45,9 +45,9 @@ export async function scrapeInstagram(instagramURL: string, message: Message) {
     const shouldShowContent = message.content.toLowerCase().includes(ResponseFlags.SHOW_CONTENT);
     const shouldDeleteMessage = message.content.toLowerCase().includes(ResponseFlags.DELETE_MESSAGE);
 
-    const content = `Posted ${time(post.taken_at_timestamp, 'R')} by [@${post.username}](<https://www.instagram.com/${
-      post.username
-    }>)${shouldShowContent ? `:\n\n${post.caption}` : ''}`;
+    const content = `Posted ${time(post.taken_at_timestamp, 'R')} by [@${escapeMarkdown(
+      post.username,
+    )}](<https://www.instagram.com/${post.username}>)${shouldShowContent ? `:\n\n${post.caption}` : ''}`;
 
     if (shouldDeleteMessage) {
       await message.channel.send({ content, files: attachments });

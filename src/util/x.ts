@@ -1,5 +1,5 @@
 import { Scraper } from '@the-convocation/twitter-scraper';
-import { type BufferResolvable, type Message, time } from 'discord.js';
+import { type BufferResolvable, type Message, escapeMarkdown, time } from 'discord.js';
 
 enum ResponseFlags {
   SHOW_CONTENT = '-c',
@@ -31,9 +31,9 @@ export async function scrapeX(postId: string, message: Message) {
     const shouldShowContent = message.content.toLowerCase().includes(ResponseFlags.SHOW_CONTENT);
     const shouldDeleteMessage = message.content.toLowerCase().includes(ResponseFlags.DELETE_MESSAGE);
 
-    const content = `Posted ${time(post.timestamp!, 'R')} by [@${post.username}](<https://x.com/${post.username}>)${
-      shouldShowContent ? `:\n\n${post.text}` : ''
-    }`;
+    const content = `Posted ${time(post.timestamp!, 'R')} by [@${escapeMarkdown(post.username!)}](<https://x.com/${
+      post.username
+    }>)${shouldShowContent ? `:\n\n${post.text}` : ''}`;
 
     if (shouldDeleteMessage) {
       await message.channel.send({ content, files: attachments });
