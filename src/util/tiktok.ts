@@ -1,5 +1,5 @@
 import { fetchVideo } from '@prevter/tiktok-scraper';
-import { AttachmentBuilder, Message, escapeMarkdown } from 'discord.js';
+import { AttachmentBuilder, Message, inlineCode } from 'discord.js';
 
 enum ResponseFlags {
   SHOW_CONTENT = '-c',
@@ -15,7 +15,7 @@ export async function scrapeTikTok(tikTokUrl: string, message: Message) {
     const shouldShowContent = message.content.toLowerCase().includes(ResponseFlags.SHOW_CONTENT);
     const shouldDeleteMessage = message.content.toLowerCase().includes(ResponseFlags.DELETE_MESSAGE);
 
-    const content = `Posted by [@${escapeMarkdown(video.author)}](<https://tiktok.com/@${video.author}>)${
+    const content = `Posted by [${inlineCode(`@${video.author}`)}](<https://tiktok.com/@${video.author}>)${
       shouldShowContent ? `:\n\n${video.description}` : ''
     }`;
 
