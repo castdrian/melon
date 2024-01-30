@@ -17,6 +17,14 @@ export class MessageListener extends Listener {
       await message.channel.send('<a:aryejihug2:1201800490602745866>');
     }
 
+    if (message.content === '<a:ayejided:1032943952166395954>') {
+      await message.channel.send('<a:ayejided:1201877394923978824>');
+    }
+
+    if (message.content === '<:yejipuff:614306273340555297>') {
+      await message.channel.send('<:yejipuff:1201877428843323412>');
+    }
+
     if (message.content.match(/^(who|whom|whomst)$/) || message.content.match(/<a?:who:\d{17,21}>/)) {
       await message.channel.send('<:who:1201796740085190706>');
     }
