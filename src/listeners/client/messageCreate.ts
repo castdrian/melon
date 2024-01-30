@@ -13,12 +13,20 @@ export class MessageListener extends Listener {
     if (message.author.bot) return;
     if (message.channel.type === ChannelType.DM) return;
 
-    if (message.content === `<@${message.client.user!.id}>`) {
+    if (message.content === '<a:aryejihug2:813322436803690507>') {
+      await message.channel.send('<a:aryejihug2:1201800490602745866>');
+    }
+
+    if (message.content.match(/^(who|whom|whomst)$/) || message.content.match(/<a?:who:\d{17,21}>/)) {
+      await message.channel.send('<:who:1201796740085190706>');
+    }
+
+    if (message.content === message.client.user?.toString()) {
       await message.reply({ files: [message.client.user.displayAvatarURL({ size: 256 })] }).catch(() => null);
     }
 
     if (message.mentions.has(message.client.user!) && message.author.id === message.client.application.owner?.id) {
-      if (message.content.replace(`<@${message.client.user!.id}>`, '').trim().length > 0) {
+      if (message.content.replace(message.client.user?.toString(), '').trim().length > 0) {
         await message.channel.sendTyping();
         await this.runCode(message);
       }
@@ -69,7 +77,7 @@ export class MessageListener extends Listener {
   }
 
   private async runCode(message: Message) {
-    const code = message.content.replace(`<@${message.client.user!.id}>`, '').trim();
+    const code = message.content.replace(message.client.user.toString(), '').trim();
     try {
       const result = runInContext(code, createContext({ message }), { timeout: 30000 });
       await message.reply(codeBlock('ts', result));
