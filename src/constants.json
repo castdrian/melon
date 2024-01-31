@@ -1,34 +1,39 @@
 {
-	"contentMap": [
+	"mappings": [
 	  {
-		"content": "hi",
-		"response": "hi"
+		"keys": ["hi"],
+		"response": "hi",
+		"regex": false
 	  },
 	  {
-		"content": "bye",
-		"response": "bye"
+		"keys": ["bye"],
+		"response": "bye",
+		"regex": false
 	  },
 	  {
-		"content": "<a:aryejihug2:813322436803690507>",
-		"response": "<a:aryejihug2:1201800490602745866>"
+		"keys": ["<a:aryejihug2:813322436803690507>"],
+		"response": "<a:aryejihug2:1201800490602745866>",
+		"regex": false
 	  },
 	  {
-		"content": "<a:ayejided:1032943952166395954>",
-		"response": "<a:ayejided:1201877394923978824>"
+		"keys": ["<a:ayejided:1032943952166395954>"],
+		"response": "<a:ayejided:1201877394923978824>",
+		"regex": false
 	  },
 	  {
-		"content": "<:yejipuff:614306273340555297>",
-		"response": "<:yejipuff:1201877428843323412>"
-	  }
-	],
-	"keywordMap": [
+		"keys": ["<:yejipuff:614306273340555297>"],
+		"response": "<:yejipuff:1201877428843323412>",
+		"regex": false
+	  },
 	  {
 		"keys": ["cute"],
-		"response": "<a:socute:1202109324118458448>"
+		"response": "<a:socute:1202109324118458448>",
+		"regex": true
 	  },
 	  {
 		"keys": ["who", "whom", "whomst", "who?", "whom?", "whomst?"],
-		"response": "<:who:1201796740085190706>"
+		"response": "<:who:1201796740085190706>",
+		"regex": true
 	  }
 	]
   }
