@@ -13,24 +13,33 @@ export class MessageListener extends Listener {
     if (message.author.bot) return;
     if (message.channel.type === ChannelType.DM) return;
 
-    if (message.content === '<a:aryejihug2:813322436803690507>') {
-      await message.channel.send('<a:aryejihug2:1201800490602745866>');
+    const emojiMap = new Map<string, string>([
+      ['<a:aryejihug2:813322436803690507>', '<a:aryejihug2:1201800490602745866>'],
+      ['<a:ayejided:1032943952166395954>', '<a:ayejided:1201877394923978824>'],
+      ['<:yejipuff:614306273340555297>', '<:yejipuff:1201877428843323412>'],
+    ]);
+
+    const keywordMap = new Map<string[], string>([
+      [['cute'], '<a:socute:1202109324118458448>'],
+      [['who', 'whom', 'whomst'], '<:who:1201796740085190706>'],
+    ]);
+
+    for (const [content, reply] of emojiMap) {
+      if (message.content === content) {
+        await message.channel.send(reply);
+      }
     }
 
-    if (message.content === '<a:ayejided:1032943952166395954>') {
-      await message.channel.send('<a:ayejided:1201877394923978824>');
-    }
+    for (const [keywords, reply] of keywordMap) {
+      for (const keyword of keywords) {
+        const wordRegex = new RegExp(`^${keyword}$`, 'i');
+        const emojiRegex = new RegExp(`<a?:\\w*${keyword}\\w*:\\d{17,21}>`, 'i');
 
-    if (message.content === '<:yejipuff:614306273340555297>') {
-      await message.channel.send('<:yejipuff:1201877428843323412>');
-    }
-
-    if (message.content.match(/^cute$/i) || message.content.match(/<a?:\w*cute\w*:\d{17,21}>/i)) {
-      await message.channel.send('<a:socute:1202109324118458448>');
-    }
-
-    if (message.content.match(/^(who|whom|whomst)$/i) || message.content.match(/<a?:\w*who\w*:\d{17,21}>/i)) {
-      await message.channel.send('<:who:1201796740085190706>');
+        if (message.content.match(wordRegex) || message.content.match(emojiRegex)) {
+          await message.channel.send(reply);
+          break;
+        }
+      }
     }
 
     if (message.content === message.client.user?.toString()) {
