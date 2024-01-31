@@ -21,7 +21,7 @@ export class MessageListener extends Listener {
 
     const keywordMap = new Map<string[], string>([
       [['cute'], '<a:socute:1202109324118458448>'],
-      [['who', 'whom', 'whomst'], '<:who:1201796740085190706>'],
+      [['who', 'whom', 'whomst', 'who?', 'whom?', 'whomst?'], '<:who:1201796740085190706>'],
     ]);
 
     for (const [content, reply] of emojiMap) {
