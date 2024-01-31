@@ -1,7 +1,7 @@
 {
 	"mappings": [
 	  {
-		"keys": ["hi"],
+		"keys": ["hi", "hii"],
 		"response": "hello",
 		"regex": false
 	  },
@@ -16,8 +16,13 @@
 		"regex": false
 	  },
 	  {
-		"keys": ["bye"],
+		"keys": ["bye", "gn"],
 		"response": "bye",
+		"regex": false
+	  },
+	  {
+		"keys": ["gm"],
+		"response": "grandmaster",
 		"regex": false
 	  },
 	  {
