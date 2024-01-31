@@ -14,22 +14,20 @@ export class MessageListener extends Listener {
     if (message.author.bot) return;
     if (message.channel.type === ChannelType.DM) return;
 
-    for (const mapping of mappings) {
-      if (mapping.regex) {
-        for (const keyword of mapping.keys) {
+    for (const { keys, response, regex } of mappings) {
+      if (regex) {
+        for (const keyword of keys) {
           const wordRegex = new RegExp(`^${keyword}$`, 'i');
           const emojiRegex = new RegExp(`<a?:\\w*${keyword}\\w*:\\d{17,21}>`, 'i');
 
           if (message.content.match(wordRegex) || message.content.match(emojiRegex)) {
-            await message.channel.send(mapping.response);
-            break;
+            return message.channel.send(response);
           }
         }
       } else {
-        for (const keyword of mapping.keys) {
+        for (const keyword of keys) {
           if (message.content === keyword) {
-            await message.channel.send(mapping.response);
-            break;
+            return message.channel.send(response);
           }
         }
       }
