@@ -2,7 +2,17 @@
 	"mappings": [
 	  {
 		"keys": ["hi"],
+		"response": "hello",
+		"regex": false
+	  },
+	  {
+		"keys": ["hello"],
 		"response": "hi",
+		"regex": false
+	  },
+	  {
+		"keys": ["hola"],
+		"response": "¿que tal?",
 		"regex": false
 	  },
 	  {
