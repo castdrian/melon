@@ -8,14 +8,15 @@ export class EventsCommand extends Command {
   public override async chatInputRun(interaction: CommandInteraction) {
     try {
       if (!interaction.isChatInputCommand()) return;
+      if (!interaction.inCachedGuild()) return;
 
-      const { scheduledEvents } = interaction.guild ?? {};
-      if (!scheduledEvents) return await interaction.reply({ content: 'No events scheduled.', ephemeral: true });
+      const { scheduledEvents } = interaction.guild;
       const events = await scheduledEvents.fetch();
       if (events.size === 0) return await interaction.reply({ content: 'No events scheduled.', ephemeral: true });
 
       const eventsArray = [...events.values()];
       const pages = [];
+
       while (eventsArray.length) {
         pages.push(eventsArray.splice(0, 10));
       }
