@@ -1,0 +1,35 @@
+{
+	"contentMap": [
+	  {
+		"content": "hi",
+		"response": "hi"
+	  },
+	  {
+		"content": "bye",
+		"response": "bye"
+	  },
+	  {
+		"content": "<a:aryejihug2:813322436803690507>",
+		"response": "<a:aryejihug2:1201800490602745866>"
+	  },
+	  {
+		"content": "<a:ayejided:1032943952166395954>",
+		"response": "<a:ayejided:1201877394923978824>"
+	  },
+	  {
+		"content": "<:yejipuff:614306273340555297>",
+		"response": "<:yejipuff:1201877428843323412>"
+	  }
+	],
+	"keywordMap": [
+	  {
+		"keys": ["cute"],
+		"response": "<a:socute:1202109324118458448>"
+	  },
+	  {
+		"keys": ["who", "whom", "whomst", "who?", "whom?", "whomst?"],
+		"response": "<:who:1201796740085190706>"
+	  }
+	]
+  }
+  

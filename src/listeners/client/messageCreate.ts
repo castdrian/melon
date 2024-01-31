@@ -3,6 +3,7 @@ import { createContext, runInContext } from 'node:vm';
 import { Listener } from '@sapphire/framework';
 import { ChannelType, Message, codeBlock } from 'discord.js';
 
+import { contentMap, keywordMap } from '@root/src/constants.json';
 import { isInstagramAutoEmbedEnabled, isTikTokAutoEmbedEnabled, isXAutoEmbedEnabled } from '@root/src/database/db';
 import { scrapeInstagram } from '@root/src/util/instagram';
 import { scrapeTikTok } from '@root/src/util/tiktok';
@@ -13,30 +14,19 @@ export class MessageListener extends Listener {
     if (message.author.bot) return;
     if (message.channel.type === ChannelType.DM) return;
 
-    const emojiMap = new Map<string, string>([
-      ['<a:aryejihug2:813322436803690507>', '<a:aryejihug2:1201800490602745866>'],
-      ['<a:ayejided:1032943952166395954>', '<a:ayejided:1201877394923978824>'],
-      ['<:yejipuff:614306273340555297>', '<:yejipuff:1201877428843323412>'],
-    ]);
-
-    const keywordMap = new Map<string[], string>([
-      [['cute'], '<a:socute:1202109324118458448>'],
-      [['who', 'whom', 'whomst', 'who?', 'whom?', 'whomst?'], '<:who:1201796740085190706>'],
-    ]);
-
-    for (const [content, reply] of emojiMap) {
+    for (const { content, response } of contentMap) {
       if (message.content === content) {
-        await message.channel.send(reply);
+        await message.channel.send(response);
       }
     }
 
-    for (const [keywords, reply] of keywordMap) {
-      for (const keyword of keywords) {
+    for (const { keys, response } of keywordMap) {
+      for (const keyword of keys) {
         const wordRegex = new RegExp(`^${keyword}$`, 'i');
         const emojiRegex = new RegExp(`<a?:\\w*${keyword}\\w*:\\d{17,21}>`, 'i');
 
         if (message.content.match(wordRegex) || message.content.match(emojiRegex)) {
-          await message.channel.send(reply);
+          await message.channel.send(response);
           break;
         }
       }
