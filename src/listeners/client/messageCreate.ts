@@ -27,7 +27,7 @@ export class MessageListener extends Listener {
         }
       } else {
         for (const keyword of mapping.keys) {
-          if (message.content.toLowerCase().includes(keyword.toLowerCase())) {
+          if (message.content === keyword) {
             await message.channel.send(mapping.response);
             break;
           }
