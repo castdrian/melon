@@ -26,7 +26,7 @@ export class MessageListener extends Listener {
         }
       } else {
         for (const keyword of keys) {
-          if (message.content === keyword) {
+          if (message.content.toLowerCase() === keyword.toLowerCase()) {
             return message.channel.send(response);
           }
         }
