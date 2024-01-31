@@ -21,6 +21,16 @@
 		"regex": false
 	  },
 	  {
+		"keys": ["what", "wat", "wut", "wot"],
+		"response": "that",
+		"regex": false
+	  },
+	  {
+		"keys": ["sup", "wsp", "wassup", "wassup?", "what's up", "what's up?"],
+		"response": "the sky",
+		"regex": false
+	  },
+	  {
 		"keys": ["<a:aryejihug2:813322436803690507>"],
 		"response": "<a:aryejihug2:1201800490602745866>",
 		"regex": false
@@ -36,7 +46,7 @@
 		"regex": false
 	  },
 	  {
-		"keys": ["cute"],
+		"keys": ["cute", "cutie", "cutiepie", "adorable", "adorbs", "adorbz"],
 		"response": "<a:socute:1202109324118458448>",
 		"regex": true
 	  },
