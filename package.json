@@ -4,7 +4,7 @@
   "module": "main.ts",
   "main": "src/main.ts",
   "type": "module",
-  "version": "1.17.6",
+  "version": "1.17.7",
   "scripts": {
     "lint": "eslint --ext .ts src",
     "lint:fix": "eslint --fix --ext .ts src",
