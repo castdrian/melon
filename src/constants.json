@@ -6,7 +6,7 @@
 		"regex": false
 	  },
 	  {
-		"keys": ["hello"],
+		"keys": ["hello", "hey"],
 		"response": "hi",
 		"regex": false
 	  },
@@ -21,8 +21,33 @@
 		"regex": false
 	  },
 	  {
-		"keys": ["gm"],
-		"response": "grandmaster",
+		"keys": ["yep"],
+		"response": "yop",
+		"regex": false
+	  },
+	  {
+		"keys": ["yop"],
+		"response": "yep",
+		"regex": false
+	  },
+	  {
+		"keys": ["yup"],
+		"response": "yip",
+		"regex": false
+	  },
+	  {
+		"keys": ["yip"],
+		"response": "yup",
+		"regex": false
+	  },
+	  {
+		"keys": ["wbu", "what about you", "what about you?"],
+		"response": "what about em",
+		"regex": false
+	  },
+	  {
+		"keys": ["hru", "how are you", "how are you?"],
+		"response": "how is anyone ever really? think about it",
 		"regex": false
 	  },
 	  {
