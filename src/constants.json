@@ -41,6 +41,16 @@
 		"regex": false
 	  },
 	  {
+		"keys": ["help"],
+		"response": "no",
+		"regex": false
+	  },
+	  {
+		"keys": ["lmao", "lmfao", "lol", "lul"],
+		"response": "rofl",
+		"regex": false
+	  },
+	  {
 		"keys": ["wbu", "what about you", "what about you?"],
 		"response": "what about em",
 		"regex": false

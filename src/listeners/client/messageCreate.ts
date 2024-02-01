@@ -33,6 +33,13 @@ export class MessageListener extends Listener {
       }
     }
 
+    if (
+      message.content.split(' ').length >= 3 &&
+      message.content.split(' ').every((word) => word === word.toUpperCase())
+    ) {
+      await message.reply('chill with the caps mate');
+    }
+
     if (message.content === message.client.user?.toString()) {
       await message.reply({ files: [message.client.user.displayAvatarURL({ size: 256 })] }).catch(() => null);
     }
