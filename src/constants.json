@@ -46,6 +46,26 @@
 		"regex": false
 	  },
 	  {
+		"keys": ["fr"],
+		"response": "🇫🇷",
+		"regex": false
+	  },
+	  {
+		"keys": ["real"],
+		"response": "fake",
+		"regex": false
+	  },
+	  {
+		"keys": ["true"],
+		"response": "false",
+		"regex": false
+	  },
+	  {
+		"keys": ["melon"],
+		"response": "leave me alone",
+		"regex": false
+	  },
+	  {
 		"keys": ["lmao", "lmfao", "lol", "lul"],
 		"response": "rofl",
 		"regex": false
