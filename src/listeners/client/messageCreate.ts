@@ -13,7 +13,7 @@ export class MessageListener extends Listener {
   public async run(message: Message) {
     if (message.author.bot) return;
     if (message.channel.type === ChannelType.DM) return;
-
+/*
     for (const { keys, response, regex } of mappings) {
       if (regex) {
         for (const keyword of keys) {
@@ -39,6 +39,7 @@ export class MessageListener extends Listener {
     ) {
       await message.reply('chill with the caps mate');
     }
+    */
 
     if (message.content === message.client.user?.toString()) {
       await message.reply({ files: [message.client.user.displayAvatarURL({ size: 256 })] }).catch(() => null);
