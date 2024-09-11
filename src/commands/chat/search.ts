@@ -65,8 +65,8 @@ export class SearchCommand extends Command {
 							.map((member) => {
 								const m = idols.find((i) => i.id === member.idol_id)!;
 								const memberName = member.current
-									? `${m.name} (${m.name_original})`
-									: strikethrough(`${m.name} (${m.name_original})`);
+									? `${m.name_original} (${m.name})`
+									: strikethrough(`${m.name_original} (${m.name})`);
 								return memberName;
 							})
 							.join('\n')}`,
