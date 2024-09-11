@@ -1,3 +1,4 @@
+import { version } from '@root/package.json';
 import { ApplyOptions } from '@sapphire/decorators';
 import { Listener, type ListenerOptions } from '@sapphire/framework';
 import { ActivityType, type Client, User } from 'discord.js';
@@ -10,7 +11,7 @@ export class ReadyListener extends Listener {
 		await client.application?.fetch();
 
 		const { username, id } = client.user!;
-		this.container.logger.info(`Successfully logged in as ${username} (${id})`);
+		this.container.logger.info(`Successfully logged in as ${username} (${id}) v${version}`);
 
 		if (!config.devGuildId && client.application?.owner instanceof User) {
 			await client.application.owner.send(`Successfully logged in as ${username} (${id})`);
