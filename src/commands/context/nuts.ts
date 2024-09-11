@@ -1,7 +1,7 @@
 import * as path from 'node:path';
 
 import { Command } from '@sapphire/framework';
-import { ApplicationCommandType, Message, type MessageContextMenuCommandInteraction } from 'discord.js';
+import { ApplicationCommandType, ApplicationIntegrationType, Message, type MessageContextMenuCommandInteraction } from 'discord.js';
 
 export class DeezNutsCommand extends Command {
 	public override async contextMenuRun(interaction: MessageContextMenuCommandInteraction) {
@@ -23,6 +23,7 @@ export class DeezNutsCommand extends Command {
 		registry.registerContextMenuCommand((builder) =>
 			builder //
 				.setName('DEEZ NUTS')
+				.setIntegrationTypes([ApplicationIntegrationType.GuildInstall, ApplicationIntegrationType.UserInstall])
 				.setType(ApplicationCommandType.Message),
 		);
 	}

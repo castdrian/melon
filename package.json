@@ -1,6 +1,6 @@
 {
   "name": "melon",
-  "version": "1.17.17",
+  "version": "1.17.18",
   "main": "src/main.ts",
   "module": "main.ts",
   "dependencies": {
@@ -18,7 +18,7 @@
     "insta-fetcher": "^1.3.35",
     "ko-fuzzy": "^1.0.0",
     "kpopnet.json": "^2.0.5",
-    "neat-config": "^2.0.0",
+    "neat-config": "^3.0.0",
     "systeminformation": "^5.23.5",
     "zod": "^3.23.8"
   },

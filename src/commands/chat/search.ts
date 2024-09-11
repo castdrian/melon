@@ -24,11 +24,11 @@ export class SearchCommand extends Command {
 			if (idol) {
 				const embed = {
 					title: `${idol.name} (${idol.name_original})`,
-					description: `**Real Name:** ${idol.real_name ? `${idol.real_name} (${idol.real_name_original})\n` : ''
-						}**Birth Date:** ${time(new Date(idol.birth_date), 'D')} (${time(
+					description: `**Real Name:** ${idol.real_name ? `${idol.real_name_original} (${idol.real_name})\n` : ''
+						}**Born:** ${time(new Date(idol.birth_date), 'D')} (${time(
 							new Date(idol.birth_date),
 							'R',
-						)})\n**Debut Date:** ${idol.debut_date ? `${time(new Date(idol.debut_date), 'D')} (${time(new Date(idol.debut_date), 'R')})` : ''
+						)})\n**Debuted:** ${idol.debut_date ? `${time(new Date(idol.debut_date), 'D')} (${time(new Date(idol.debut_date), 'R')})` : ''
 						}${idol.height ? `\n**Height:** ${idol.height} CM` : ''}${idol.weight ? `\n**Weight:** ${idol.weight} KG` : ''
 						}${idol.groups.length > 0
 							? `\n**Groups:** ${idol.groups
@@ -51,7 +51,7 @@ export class SearchCommand extends Command {
 
 			if (group) {
 				const embed = {
-					title: `${group.name} (${group.name_original})`,
+					title: `${group.name_original} (${group.name})`,
 					description: `**Agency:** ${group.agency_name}\n**Debut Date:** ${group.debut_date
 							? `${time(new Date(group.debut_date), 'D')} (${time(new Date(group.debut_date), 'R')})`
 							: ''
