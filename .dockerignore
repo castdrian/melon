@@ -1,4 +1,3 @@
-*.db
 .env
 .gitignore
 node_modules/
