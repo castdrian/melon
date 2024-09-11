@@ -2,7 +2,7 @@ import { Command } from '@sapphire/framework';
 import { ApplicationIntegrationType, type AutocompleteInteraction, type CommandInteraction, InteractionContextType, strikethrough, time } from 'discord.js';
 import { search } from 'fast-fuzzy';
 import { getKoreanRegex } from 'ko-fuzzy';
-import kpop, { type Idol } from 'kpopnet.json';
+import kpop, { type Group, type Idol } from 'kpopnet.json';
 
 import { MELON_COLOR } from '@root/src/config';
 
@@ -125,11 +125,20 @@ export class SearchCommand extends Command {
 			}
 
 			const response = matches.slice(0, 5).map((item) => {
-				const idol = item as Idol;
-				const group = groups.find((g) => g.members.some((member) => member.idol_id === idol.id && member.current));
+				if ('birth_date' in item) {
+					const idol = item as Idol;
+					const group = groups.find((g) =>
+						g.members.some((member) => member.idol_id === idol.id && member.current)
+					);
+					return {
+						name: `${idol.name_original} (${idol.name})${group ? ` - ${group.name_original} (${group.name})` : ''}`,
+						value: idol.id,
+					};
+				}
+				const group = item as Group;
 				return {
-					name: `${idol.name} (${idol.name_original}) ${group ? `- ${group.name}` : ''}`,
-					value: idol.id,
+					name: `${group.name_original} (${group.name})`,
+					value: group.id,
 				};
 			});
 
