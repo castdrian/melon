@@ -23,7 +23,7 @@ export class SearchCommand extends Command {
 
 			if (idol) {
 				const embed = {
-					title: `${idol.name} (${idol.name_original})`,
+					title: `${idol.name_original} (${idol.name})`,
 					description: `**Real Name:** ${idol.real_name ? `${idol.real_name_original} (${idol.real_name})\n` : ''
 						}**Born:** ${time(new Date(idol.birth_date), 'D')} (${time(
 							new Date(idol.birth_date),
@@ -53,8 +53,8 @@ export class SearchCommand extends Command {
 				const embed = {
 					title: `${group.name_original} (${group.name})`,
 					description: `**Agency:** ${group.agency_name}\n**Debut Date:** ${group.debut_date
-							? `${time(new Date(group.debut_date), 'D')} (${time(new Date(group.debut_date), 'R')})`
-							: ''
+						? `${time(new Date(group.debut_date), 'D')} (${time(new Date(group.debut_date), 'R')})`
+						: ''
 						}${group.disband_date
 							? `\n**Disband Date:** ${time(new Date(group.disband_date), 'D')} (${time(
 								new Date(group.disband_date),
