@@ -14,7 +14,7 @@ export class ReadyListener extends Listener {
 		this.container.logger.info(`Successfully logged in as ${username} (${id}) v${version}`);
 
 		if (!config.devGuildId && client.application?.owner instanceof User) {
-			await client.application.owner.send(`Successfully logged in as ${username} (${id})`);
+			await client.application.owner.send(`Successfully logged in as ${username} (${id}) v${version}`);
 		}
 
 		const updateActivity = () => {
