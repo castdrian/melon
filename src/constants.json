@@ -114,6 +114,11 @@
 		"keys": ["who", "whom", "whomst", "who?", "whom?", "whomst?"],
 		"response": "<:who:1201796740085190706>",
 		"regex": true
+	  },
+	  {
+		"keys": ["kiof", "kiol", "kiss of life"],
+		"response": "kiss of cultural appropriation",
+		"regex": false
 	  }
 	]
   }
