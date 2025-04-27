@@ -1,6 +1,6 @@
 import { Command, version as sapphver } from '@sapphire/framework';
 import { version as bunver } from 'bun';
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, type CommandInteraction, version as djsver, time } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, type CommandInteraction, ContainerBuilder, version as djsver, MessageFlags, SectionBuilder, TextDisplayBuilder, ThumbnailBuilder, time } from 'discord.js';
 import { cpu, mem, osInfo } from 'systeminformation';
 import { version as tsver } from 'typescript';
 
@@ -23,15 +23,13 @@ export class InfoCommand extends Command {
 				total / 1024 / 1024,
 			)} MB`;
 
-			const embed = {
-				title: pkg.name,
-				description: `${pkg.name} [v${pkg.version}](<https://github.com/castdrian/melon>)\n${pkg.description}\n\n**Uptime:** Container started ${uptimeString}\n**System:** ${osString}\n**CPU:** ${cpuString}\n**Memory Usage:** ${memoryString}\n\n**Bun:** [v${bunver}](<https://bun.sh/>)\n**TypeScript:** [v${tsver}](<https://www.typescriptlang.org/>)\n**Discord.js:** [v${djsver}](<https://discord.js.org/>)\n**Sapphire:** [v${sapphver}](<https://www.sapphirejs.dev/>)`,
-				thumbnail: {
-					url: this.container.client.user!.displayAvatarURL(),
-				},
-				color: MELON_COLOR,
-			};
+			const content = new TextDisplayBuilder()
+				.setContent(`${pkg.name} [v${pkg.version}](<https://github.com/castdrian/melon>)\n${pkg.description}\n\n**Uptime:** Container started ${uptimeString}\n**System:** ${osString}\n**CPU:** ${cpuString}\n**Memory Usage:** ${memoryString}\n\n**Bun:** [v${bunver}](<https://bun.sh/>)\n**TypeScript:** [v${tsver}](<https://www.typescriptlang.org/>)\n**Discord.js:** [v${djsver}](<https://discord.js.org/>)\n**Sapphire:** [v${sapphver}](<https://www.sapphirejs.dev/>)`)
 
+			const section = new SectionBuilder()
+			.addTextDisplayComponents(content)
+			.setThumbnailAccessory(new ThumbnailBuilder().setURL(this.container.client.user!.displayAvatarURL()))
+		
 			const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
 				new ButtonBuilder()
 					.setLabel('Contact')
@@ -45,7 +43,12 @@ export class InfoCommand extends Command {
 					.setURL('https://forms.gle/EqwSH6XzFoC2knWs7'),
 			);
 
-			await interaction.reply({ embeds: [embed], components: [row] });
+			const container = new ContainerBuilder()
+			.addSectionComponents(section)
+			.addActionRowComponents(row)
+			.setAccentColor(MELON_COLOR)
+
+			await interaction.reply({ components: [container], flags: MessageFlags.IsComponentsV2 });
 			await interaction.followUp({
 				content:
 					'*This application is currently in its invite-only stage, if you wish to add it to your guild please contact [@castdrian](<https://discord.com/users/224617799434108928>) directly or fill out the access request form.*',
