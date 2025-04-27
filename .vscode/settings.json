@@ -8,10 +8,17 @@
 	},
 	"markdownlint.config": {
 		"MD033": {
-			"allowed_elements": ["details", "summary", "strong"]
+			"allowed_elements": [
+				"details",
+				"summary",
+				"strong"
+			]
 		}
 	},
 	"[jsonc]": {
 		"editor.defaultFormatter": "vscode.json-language-features"
+	},
+	"[json]": {
+		"editor.defaultFormatter": "biomejs.biome"
 	}
 }
