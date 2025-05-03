@@ -3,11 +3,11 @@ FROM oven/bun:latest as base
 WORKDIR /usr/src/app
 
 # Install dependencies into temp directory
-# This will cache them and speed up future builds
 FROM base AS install
-RUN --mount=type=secret,id=npmrc,target=/usr/src/app/.npmrc \
-    mkdir -p /temp/dev && \
-    cp .npmrc /temp/dev/.npmrc
+ARG GITHUB_TOKEN
+RUN echo "//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}" > ~/.npmrc && \
+    echo "@castdrian:registry=https://npm.pkg.github.com/" >> ~/.npmrc && \
+    mkdir -p /temp/dev
 COPY package.json bun.lockb /temp/dev/
 RUN cd /temp/dev && bun install --frozen-lockfile
 
