@@ -11,7 +11,8 @@ RUN cd /temp/dev && bun install --frozen-lockfile
 
 # Install with --production
 RUN mkdir -p /temp/prod && \
-    cp /temp/dev/.npmrc package.json bun.lockb /temp/prod/ && \
+    cd /temp/dev && \
+    cp .npmrc package.json bun.lockb /temp/prod/ && \
     cd /temp/prod && bun install --frozen-lockfile --production
 
 # Copy node_modules from temp directory
