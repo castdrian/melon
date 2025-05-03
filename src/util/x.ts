@@ -1,13 +1,28 @@
-import { Scraper } from '@the-convocation/twitter-scraper';
-import { type BufferResolvable, type Message, inlineCode, time } from 'discord.js';
+import { MELON_COLOR } from "@src/config";
+import { Scraper } from "@the-convocation/twitter-scraper";
+import {
+	ContainerBuilder,
+	MediaGalleryBuilder,
+	MediaGalleryItemBuilder,
+	type Message,
+	MessageFlags,
+	SectionBuilder,
+	TextDisplayBuilder,
+	ThumbnailBuilder,
+	inlineCode,
+	time,
+} from "discord.js";
 
 enum ResponseFlags {
-	SHOW_CONTENT = '-c',
-	DELETE_MESSAGE = '-d',
+	SHOW_CONTENT = "-c",
+	DELETE_MESSAGE = "-d",
 }
 
 export async function scrapeX(postId: string, message: Message) {
 	try {
+		if (!message.channel.isTextBased()) return;
+		if (message.channel.isDMBased()) return;
+
 		const post = await new Scraper().getTweet(postId);
 		if (!post) {
 			message.client.logger.info(`No post found for ID ${postId}`);
@@ -19,30 +34,68 @@ export async function scrapeX(postId: string, message: Message) {
 			return;
 		}
 
-		const attachments: BufferResolvable[] = [];
-		post.photos.forEach((photo) => attachments.push(photo.url));
-		post.videos.forEach((video) => attachments.push(video.url ?? ''));
+		const shouldShowContent = message.content
+			.toLowerCase()
+			.includes(ResponseFlags.SHOW_CONTENT);
+		const shouldDeleteMessage = message.content
+			.toLowerCase()
+			.includes(ResponseFlags.DELETE_MESSAGE);
 
-		if (!attachments.length) {
-			message.client.logger.info(`No attachments found for post ${postId}`);
-			return;
+		const container = new ContainerBuilder().setAccentColor(MELON_COLOR);
+
+		// Add header section with thumbnail
+		const content = new TextDisplayBuilder().setContent(
+			`Posted ${time(post.timestamp!, "R")} by [${inlineCode(`@${post.username!}`)}](<https://x.com/${post.username}>)${
+				shouldShowContent ? `\n\n${post.text}` : ""
+			}`,
+		);
+
+		container.addSectionComponents(
+			new SectionBuilder()
+				.addTextDisplayComponents(content)
+				.setThumbnailAccessory(
+					new ThumbnailBuilder().setURL(
+						message.client.user!.displayAvatarURL(),
+					),
+				),
+		);
+
+		// Add media gallery
+		const gallery = new MediaGalleryBuilder();
+		const mediaItems = [
+			...post.photos.map((photo) =>
+				new MediaGalleryItemBuilder().setURL(photo.url),
+			),
+			...post.videos.map((video) =>
+				new MediaGalleryItemBuilder().setURL(video.url ?? ""),
+			),
+		].filter((item) => item.data.media?.url);
+
+		if (mediaItems.length) {
+			gallery.addItems(...mediaItems);
+			container.addMediaGalleryComponents(gallery);
 		}
-
-		const shouldShowContent = message.content.toLowerCase().includes(ResponseFlags.SHOW_CONTENT);
-		const shouldDeleteMessage = message.content.toLowerCase().includes(ResponseFlags.DELETE_MESSAGE);
-
-		const content = `Posted ${time(post.timestamp!, 'R')} by [${inlineCode(`@${post.username!}`)}](<https://x.com/${post.username
-			}>)${shouldShowContent ? `:\n\n${post.text}` : ''}`;
 
 		if (shouldDeleteMessage) {
-			await message.channel.send({ content, files: attachments });
+			await message.channel.send({
+				components: [container],
+				flags: MessageFlags.IsComponentsV2,
+			});
 			await message.delete().catch(() => null);
 		} else {
-			await message.suppressEmbeds(true).catch(() => null);
-			await message.reply({ content, files: attachments });
+			await message.suppressEmbeds(true);
+			await message.reply({
+				components: [container],
+				flags: MessageFlags.IsComponentsV2,
+			});
 		}
 	} catch (error) {
-		await message.channel.send(`An error occurred in scrapeX: ${error}`).catch(() => null);
-		message.client.logger.error(`An error occurred in scrapeX: ${error}`);
+			if (!message.channel.isTextBased()) return;
+			if (message.channel.isDMBased()) return;
+			
+			await message.channel
+				.send(`An error occurred in scrapeX: ${error}`)
+				.catch(() => null);
+			message.client.logger.error(`An error occurred in scrapeX: ${error}`);
 	}
 }
