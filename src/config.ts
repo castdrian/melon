@@ -1,4 +1,4 @@
-import { createConfigLoader } from 'neat-config';
+import { createConfigLoader } from "@neato/config";
 import { z } from 'zod';
 
 const schema = z.object({
