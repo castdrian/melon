@@ -126,7 +126,7 @@ export async function scrapeInstagram(instagramURL: string, message: Message) {
 		const container = new ContainerBuilder().setAccentColor(MELON_COLOR);
 
 		const headerContent = new TextDisplayBuilder().setContent(
-			`Posted ${time(post.taken_at, "R")} by **@${post.user.username}**${
+			`Posted ${time(post.taken_at, "R")} by [**@${post.user.username}**](<https://instagram.com/${post.user.username}>)${
 				post.caption ? `\n\n${post.caption.text}` : ""
 			}`,
 		);

@@ -45,7 +45,7 @@ export async function scrapeX(postId: string, message: Message) {
 
 		// Add header section with thumbnail
 		const content = new TextDisplayBuilder().setContent(
-			`Posted ${time(post.timestamp!, "R")} by [${inlineCode(`@${post.username!}`)}](<https://x.com/${post.username}>)${
+			`Posted ${time(post.timestamp!, "R")} by [**@${post.username!}**](<https://x.com/${post.username}>)${
 				shouldShowContent ? `\n\n${post.text}` : ""
 			}`,
 		);
@@ -90,12 +90,12 @@ export async function scrapeX(postId: string, message: Message) {
 			});
 		}
 	} catch (error) {
-			if (!message.channel.isTextBased()) return;
-			if (message.channel.isDMBased()) return;
-			
-			await message.channel
-				.send(`An error occurred in scrapeX: ${error}`)
-				.catch(() => null);
-			message.client.logger.error(`An error occurred in scrapeX: ${error}`);
+		if (!message.channel.isTextBased()) return;
+		if (message.channel.isDMBased()) return;
+
+		await message.channel
+			.send(`An error occurred in scrapeX: ${error}`)
+			.catch(() => null);
+		message.client.logger.error(`An error occurred in scrapeX: ${error}`);
 	}
 }

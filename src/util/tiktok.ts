@@ -17,61 +17,59 @@ enum ResponseFlags {
 
 export async function scrapeTikTok(tikTokUrl: string, message: Message) {
 	try {
-			if (!message.channel.isTextBased()) return;
-			if (message.channel.isDMBased()) return;
+		if (!message.channel.isTextBased()) return;
+		if (message.channel.isDMBased()) return;
 
-			const video = await fetchVideo(tikTokUrl);
-			const buffer = await video.download();
-			const shouldShowContent = message.content
-				.toLowerCase()
-				.includes(ResponseFlags.SHOW_CONTENT);
-			const shouldDeleteMessage = message.content
-				.toLowerCase()
-				.includes(ResponseFlags.DELETE_MESSAGE);
+		const video = await fetchVideo(tikTokUrl);
+		const buffer = await video.download();
+		const shouldShowContent = message.content
+			.toLowerCase()
+			.includes(ResponseFlags.SHOW_CONTENT);
+		const shouldDeleteMessage = message.content
+			.toLowerCase()
+			.includes(ResponseFlags.DELETE_MESSAGE);
 
-			const container = new ContainerBuilder().setAccentColor(MELON_COLOR);
+		const container = new ContainerBuilder().setAccentColor(MELON_COLOR);
 
-			// Add header section with thumbnail
-			const content = new TextDisplayBuilder().setContent(
-				`Posted by [${inlineCode(`@${video.author}`)}](<https://tiktok.com/@${video.author}>)${
-					shouldShowContent ? `\n\n${video.description}` : ""
-				}`,
-			);
+		// Add header section with thumbnail
+		const content = new TextDisplayBuilder().setContent(
+			`Posted by []**@${video.author}**](<https://tiktok.com/@${video.author}>)${
+				shouldShowContent ? `\n\n${video.description}` : ""
+			}`,
+		);
 
-			container.addSectionComponents(
-				new SectionBuilder()
-					.addTextDisplayComponents(content)
-					.setThumbnailAccessory(
-						new ThumbnailBuilder().setURL(
-							message.client.user!.displayAvatarURL(),
-						),
+		container.addSectionComponents(
+			new SectionBuilder()
+				.addTextDisplayComponents(content)
+				.setThumbnailAccessory(
+					new ThumbnailBuilder().setURL(
+						message.client.user!.displayAvatarURL(),
 					),
-			);
+				),
+		);
 
-			if (shouldDeleteMessage) {
-				await message.channel.send({
-					files: [{ attachment: buffer, name: "tiktok.mp4" }],
-					components: [container],
-					flags: MessageFlags.IsComponentsV2,
-				});
-				await message.delete().catch(() => null);
-			} else {
-				await message.suppressEmbeds(true);
-				await message.reply({
-					files: [{ attachment: buffer, name: "tiktok.mp4" }],
-					components: [container],
-					flags: MessageFlags.IsComponentsV2,
-				});
-			}
+		if (shouldDeleteMessage) {
+			await message.channel.send({
+				files: [{ attachment: buffer, name: "tiktok.mp4" }],
+				components: [container],
+				flags: MessageFlags.IsComponentsV2,
+			});
+			await message.delete().catch(() => null);
+		} else {
+			await message.suppressEmbeds(true);
+			await message.reply({
+				files: [{ attachment: buffer, name: "tiktok.mp4" }],
+				components: [container],
+				flags: MessageFlags.IsComponentsV2,
+			});
+		}
 	} catch (error) {
-			if (!message.channel.isTextBased()) return;
-			if (message.channel.isDMBased()) return;
-			
-			await message.channel
-				.send(`An error occurred in scrapeTikTok: ${error}`)
-				.catch(() => null);
-			message.client.logger.error(
-				`An error occurred in scrapeTikTok: ${error}`,
-			);
+		if (!message.channel.isTextBased()) return;
+		if (message.channel.isDMBased()) return;
+
+		await message.channel
+			.send(`An error occurred in scrapeTikTok: ${error}`)
+			.catch(() => null);
+		message.client.logger.error(`An error occurred in scrapeTikTok: ${error}`);
 	}
 }
