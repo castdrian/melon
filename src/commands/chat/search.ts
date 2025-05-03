@@ -19,6 +19,40 @@ import {
 
 import { MELON_COLOR } from "@root/src/config";
 
+interface SocialLinks {
+	instagram?: string;
+	twitter?: string;
+	youtube?: string;
+	spotify?: string;
+	facebook?: string;
+	tiktok?: string;
+	website?: string;
+	fancafe?: string;
+	weibo?: string;
+	vlive?: string;
+}
+
+interface CompanyHistory {
+	name: string;
+	period: {
+		start: string;
+		end?: string;
+	};
+}
+
+interface Member {
+	name: string;
+	period?: {
+		start: string;
+		end?: string;
+	};
+}
+
+interface MemberHistory {
+	currentMembers?: Member[];
+	formerMembers?: Member[];
+}
+
 export class SearchCommand extends Command {
 	private formatStatus(status: string): string {
 		return status.charAt(0).toUpperCase() + status.slice(1);
@@ -28,28 +62,7 @@ export class SearchCommand extends Command {
 		return `${type.charAt(0).toUpperCase()}${type.slice(1)} Group`;
 	}
 
-	private formatSocialLinks(socials: {
-		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-		instagram: any;
-		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-		twitter: any;
-		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-		youtube: any;
-		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-		spotify: any;
-		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-		facebook: any;
-		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-		tiktok: any;
-		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-		website: any;
-		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-		fancafe: any;
-		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-		weibo: any;
-		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-		vlive: any;
-	}): string {
+	private formatSocialLinks(socials: SocialLinks): string {
 		if (!socials) return "";
 		const links = [];
 		if (socials.instagram) links.push(`[Instagram](${socials.instagram})`);
@@ -66,34 +79,18 @@ export class SearchCommand extends Command {
 	}
 
 	private formatCompanyHistory(company: {
-		history: {
-			// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-			name: any;
-			period: { start: string | number | Date; end: string | number | Date };
-		}[];
+		history: CompanyHistory[];
 	}): string {
 		if (!company?.history?.length) return "";
 		return company.history
 			.map(
-				(h: {
-					// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-					name: any;
-					period: {
-						start: string | number | Date;
-						end: string | number | Date;
-					};
-				}) =>
+				(h) =>
 					`• ${h.name} (${time(new Date(h.period.start), "D")}${h.period.end ? ` - ${time(new Date(h.period.end), "D")}` : " - Present"})`,
 			)
 			.join("\n");
 	}
 
-	private formatMembers(memberHistory?: {
-		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-		currentMembers?: any[];
-		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-		formerMembers?: any[];
-	}): string {
+	private formatMembers(memberHistory?: MemberHistory): string {
 		if (!memberHistory?.currentMembers && !memberHistory?.formerMembers)
 			return "";
 
@@ -114,9 +111,8 @@ export class SearchCommand extends Command {
 					? ` (${time(new Date(m.period.start), "D")}${m.period.end ? ` - ${time(new Date(m.period.end), "D")}` : " - Present"})`
 					: "";
 				const name = isCurrent ? m.name : `~~${m.name}~~`;
-				return `• ${name}${m.position?.length ? ` [${m.position.join(", ")}]` : ""}${periodStr}`;
+				return `• ${name}${periodStr}`;
 			})
-			// Remove duplicates based on the full formatted string
 			.filter((item, index, self) => self.indexOf(item) === index)
 			.join("\n");
 
@@ -143,11 +139,16 @@ export class SearchCommand extends Command {
 				const headerInfo = [
 					`# ${idol.names.korean ?? ""} (${idol.names.stage})`,
 					`**Status:** ${this.formatStatus(idol.status)}`,
+					idol.names.full ? `**Full Name:** ${idol.names.full}` : null,
+					idol.names.native ? `**Native Name:** ${idol.names.native}` : null,
 					idol.names.japanese
 						? `**Japanese Name:** ${idol.names.japanese}`
 						: null,
 					idol.names.chinese ? `**Chinese Name:** ${idol.names.chinese}` : null,
 					idol.company?.current ? `**Company:** ${idol.company.current}` : null,
+					idol.country
+						? `**Nationality:** :flag_${idol.country.code}: ${idol.country.name}`
+						: null,
 				]
 					.filter(Boolean)
 					.join("\n");
@@ -177,6 +178,7 @@ export class SearchCommand extends Command {
 				const sections = [
 					headerInfo,
 					personalInfo,
+					idol.description ? `**Description**\n${idol.description}` : null,
 					idol.company?.history?.length
 						? `**Company History**\n${this.formatCompanyHistory(idol.company)}`
 						: null,
@@ -202,8 +204,7 @@ export class SearchCommand extends Command {
 											end: string | number | Date;
 										};
 										status: string;
-										// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-										name: any;
+										name: string;
 									}) => {
 										const periodStr = g.period
 											? ` (${time(new Date(g.period.start), "D")}${g.period.end ? ` - ${time(new Date(g.period.end), "D")}` : " - Present"})`
@@ -232,17 +233,20 @@ export class SearchCommand extends Command {
 				const group = result.item as Group;
 
 				const headerInfo = [
-					`# ${group.names.korean ?? ""} (${group.names.stage})`,
+					`# ${group.groupInfo?.names?.korean ?? ""} (${group.groupInfo?.names?.stage ?? ""})`,
 					`**Type:** ${this.formatGroupType(group.type)}`,
 					`**Status:** ${this.formatStatus(group.status)}`,
-					group.names.japanese
-						? `**Japanese Name:** ${group.names.japanese}`
+					group.groupInfo?.names?.japanese
+						? `**Japanese Name:** ${group.groupInfo.names.japanese}`
 						: null,
-					group.names.chinese
-						? `**Chinese Name:** ${group.names.chinese}`
+					group.groupInfo?.names?.chinese
+						? `**Chinese Name:** ${group.groupInfo.names.chinese}`
 						: null,
 					group.company?.current
 						? `**Company:** ${group.company.current}`
+						: null,
+					group.groupInfo?.fandomName
+						? `**Fandom Name:** ${group.groupInfo.fandomName}`
 						: null,
 				]
 					.filter(Boolean)
@@ -312,23 +316,31 @@ export class SearchCommand extends Command {
 
 			const response = results
 				.map((result) => {
-					if (result.type === "idol") {
-						const idol = result.item as Idol;
-						const currentGroup = idol.groups?.find(
-							(g: { status: string }) => g?.status === "current",
-						);
+					try {
+						if (result.type === "idol") {
+							const idol = result.item as Idol;
+							const currentGroup = idol.groups?.find(
+								(g: { status: string }) => g?.status === "current",
+							);
+							return {
+								name: `${idol.names.korean ? `${idol.names.korean} ` : ""}(${idol.names.stage})${currentGroup?.name ? ` - ${currentGroup.name}` : ""}`,
+								value: idol.id,
+							};
+						}
+
+						const group = result.item as Group;
 						return {
-							name: `${idol.names.korean ? `${idol.names.korean} ` : ""}(${idol.names.stage})${currentGroup?.name ? ` - ${currentGroup.name}` : ""}`,
-							value: idol.id,
+							name: `${group.groupInfo?.names?.korean ? `${group.groupInfo.names.korean} ` : ""}(${group.groupInfo?.names?.stage ?? "Unknown"})`,
+							value: group.id,
 						};
+					} catch (err) {
+						console.error("Error processing result:", err);
+						return null;
 					}
-					const group = result.item as Group;
-					return {
-						name: `${group.names.korean ? `${group.names.korean} ` : ""}(${group.names.stage})`,
-						value: group.id,
-					};
 				})
-				.filter((item) => item.name && item.value)
+				.filter((item): item is { name: string; value: string } =>
+					Boolean(item?.name && item?.value),
+				)
 				.slice(0, 5);
 
 			await interaction.respond(response);
