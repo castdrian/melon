@@ -7,6 +7,8 @@ services:
       context: .
       dockerfile: Dockerfile
       target: release
+      secrets:
+        - npmrc
     container_name: melon
     environment:
       - GITHUB_TOKEN=${GITHUB_TOKEN}
@@ -17,3 +19,7 @@ services:
        source: ./melon.db
        target: /usr/src/app/melon.db
     command: bun start
+
+secrets:
+  npmrc:
+    file: .npmrc

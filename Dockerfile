@@ -5,7 +5,9 @@ WORKDIR /usr/src/app
 # Install dependencies into temp directory
 # This will cache them and speed up future builds
 FROM base AS install
-RUN mkdir -p /temp/dev
+RUN --mount=type=secret,id=npmrc,target=/usr/src/app/.npmrc \
+    mkdir -p /temp/dev && \
+    cp .npmrc /temp/dev/.npmrc
 COPY package.json bun.lockb /temp/dev/
 RUN cd /temp/dev && bun install --frozen-lockfile
 
