@@ -4,9 +4,7 @@ WORKDIR /usr/src/app
 
 # Install dependencies into temp directory
 FROM base AS install
-ARG GITHUB_TOKEN
-RUN printf "//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}\n@castdrian:registry=https://npm.pkg.github.com/\n" > ~/.npmrc
-COPY package.json bun.lockb /temp/dev/
+COPY .npmrc package.json bun.lockb /temp/dev/
 RUN cd /temp/dev && bun install --frozen-lockfile
 
 # Install with --production (exclude devDependencies)
