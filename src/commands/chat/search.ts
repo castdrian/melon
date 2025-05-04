@@ -203,9 +203,19 @@ export class SearchCommand extends Command {
 										status: string;
 										name: string;
 									}) => {
-										const periodStr = g.period
-											? ` (${time(new Date(g.period.start), "D")}${g.period.end ? ` - ${time(new Date(g.period.end), "D")}` : " - Present"})`
-											: "";
+										if (!g.period)
+											return `• ${g.status === "current" ? g.name : `~~${g.name}~~`}`;
+
+										const startDate = new Date(g.period.start);
+										const endDate = g.period.end
+											? new Date(g.period.end)
+											: null;
+
+										const periodStr =
+											endDate?.getFullYear() === startDate.getFullYear()
+												? ` (${time(startDate, "R")})`
+												: ` (${time(startDate, "D")}${endDate ? ` - ${time(endDate, "D")}` : " - Present"})`;
+
 										return `• ${g.status === "current" ? g.name : `~~${g.name}~~`}${periodStr}`;
 									},
 								)
