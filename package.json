@@ -5,7 +5,7 @@
   "module": "main.ts",
   "dependencies": {
     "@biomejs/biome": "^1.9.4",
-    "@castdrian/kdapi": "0.2.1",
+    "@castdrian/kdapi": "0.2.2",
     "@neato/config": "^3.0.0",
     "@prevter/tiktok-scraper": "^1.0.1",
     "@sapphire/decorators": "^6.1.1",
