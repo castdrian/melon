@@ -1,6 +1,6 @@
 {
   "name": "melon",
-  "version": "1.22.1",
+  "version": "1.22.2",
   "main": "src/main.ts",
   "module": "main.ts",
   "dependencies": {
