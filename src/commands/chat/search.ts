@@ -320,7 +320,7 @@ export class SearchCommand extends Command {
 			const results = search(value, {
 				type: "all",
 				limit: 10,
-				threshold: 0.3,
+				threshold: 0.4,
 			});
 
 			if (!results?.length) {
