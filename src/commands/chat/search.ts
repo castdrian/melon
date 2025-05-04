@@ -1,9 +1,4 @@
-import {
-	type Group,
-	type Idol,
-	fuzzySearch,
-	getItemById,
-} from "@castdrian/kdapi";
+import { type Group, type Idol, getItemById, search } from "@castdrian/kdapi";
 import { Command } from "@sapphire/framework";
 import {
 	ApplicationIntegrationType,
@@ -124,17 +119,19 @@ export class SearchCommand extends Command {
 			if (!interaction.isChatInputCommand()) return;
 			const value = interaction.options.getString("query", true);
 
-			const result = getItemById(value);
-			if (!result) {
-				return interaction.reply(
-					"Could not find an idol or group with that ID.",
-				);
+			const item = getItemById(value);
+			if (!item) {
+				return interaction.reply({
+					content: "Could not find an idol or group with that ID.",
+					flags: MessageFlags.Ephemeral,
+				});
 			}
 
 			const container = new ContainerBuilder().setAccentColor(MELON_COLOR);
 
-			if (result.type === "idol") {
-				const idol = result.item as Idol;
+			// Type check based on properties unique to idols
+			if ("names" in item && "stage" in item.names) {
+				const idol = item as Idol;
 
 				const headerInfo = [
 					`# ${idol.names.korean ?? ""} (${idol.names.stage})`,
@@ -230,12 +227,14 @@ export class SearchCommand extends Command {
 
 				container.addSectionComponents(section);
 			} else {
-				const group = result.item as Group;
+				const group = item as Group;
+				const name = group.name ?? group.groupInfo?.names?.stage ?? "Unknown";
+				const korean = group.groupInfo?.names?.korean;
 
 				const headerInfo = [
-					`# ${group.groupInfo?.names?.korean ?? ""} (${group.groupInfo?.names?.stage ?? ""})`,
-					`**Type:** ${this.formatGroupType(group.type)}`,
-					`**Status:** ${this.formatStatus(group.status)}`,
+					`# ${korean ? `${korean} ` : ""}(${name})`,
+					`**Type:** ${this.formatGroupType(group.type ?? "unknown")}`,
+					`**Status:** ${this.formatStatus(group.status ?? "unknown")}`,
 					group.groupInfo?.names?.japanese
 						? `**Japanese Name:** ${group.groupInfo.names.japanese}`
 						: null,
@@ -296,6 +295,10 @@ export class SearchCommand extends Command {
 			});
 		} catch (ex) {
 			this.container.logger.error(ex);
+			await interaction.reply({
+				content: "An error occurred while processing your request.",
+				flags: MessageFlags.Ephemeral,
+			});
 		}
 	}
 
@@ -304,10 +307,10 @@ export class SearchCommand extends Command {
 			if (interaction.commandName !== this.name) return;
 			const { value } = interaction.options.getFocused(true);
 
-			const results = fuzzySearch(value, {
+			const results = search(value, {
 				type: "all",
-				limit: 5,
-				threshold: 0.4,
+				limit: 10,
+				threshold: 0.3,
 			});
 
 			if (!results?.length) {
@@ -315,7 +318,7 @@ export class SearchCommand extends Command {
 			}
 
 			const response = results
-				.map((result) => {
+				.map((result: { type: string; item: Idol | Group }) => {
 					try {
 						if (result.type === "idol") {
 							const idol = result.item as Idol;
@@ -338,10 +341,15 @@ export class SearchCommand extends Command {
 						return null;
 					}
 				})
-				.filter((item): item is { name: string; value: string } =>
-					Boolean(item?.name && item?.value),
+				.filter(
+					(
+						item: { name: string; value: string } | null,
+					): item is {
+						name: string;
+						value: string;
+					} => Boolean(item?.name && item?.value),
 				)
-				.slice(0, 5);
+				.slice(0, 10);
 
 			await interaction.respond(response);
 		} catch (ex) {
