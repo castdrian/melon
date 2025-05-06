@@ -1,3 +1,4 @@
+import * as path from "node:path";
 import { createContext, runInContext } from "node:vm";
 
 import { Listener } from "@sapphire/framework";
@@ -14,10 +15,36 @@ import { scrapeTikTok } from "@root/src/util/tiktok";
 import { scrapeX } from "@root/src/util/x";
 
 export class MessageListener extends Listener {
+	private static lastSakiMessage = 0;
+
 	public async run(message: Message) {
 		if (message.author.bot) return;
 		if (message.channel.type === ChannelType.DM) return;
 		if (message.channel.type === ChannelType.GroupDM) return;
+
+		if (message.author.id === "904157012710015016") {
+			const now = Date.now();
+			const hoursSinceLastMessage =
+				(now - MessageListener.lastSakiMessage) / (1000 * 60 * 60);
+
+			if (
+				hoursSinceLastMessage >= 12 ||
+				MessageListener.lastSakiMessage === 0
+			) {
+				const __dirname = path.dirname(new URL(import.meta.url).pathname);
+				const sakiPath = path.join(
+					__dirname,
+					"..",
+					"..",
+					"..",
+					"media",
+					"SAKI.mov",
+				);
+
+				await message.reply({ files: [sakiPath] });
+				MessageListener.lastSakiMessage = now;
+			}
+		}
 
 		for (const { keys, response, regex } of mappings) {
 			if (regex) {
