@@ -68,15 +68,6 @@ interface InstagramUser {
 	is_verified: boolean;
 }
 
-interface MediaItem {
-	media: {
-		url: string;
-		width?: number;
-		height?: number;
-	};
-	description?: string;
-}
-
 async function fetchInstagramPost(
 	shortcode: string,
 ): Promise<InstagramPostResponse> {
@@ -114,8 +105,8 @@ async function fetchInstagramPost(
 
 export async function scrapeInstagram(instagramURL: string, message: Message) {
 	try {
-		// Extract shortcode from URL
-		const shortcode = instagramURL.split("/p/")[1]?.split("/")[0];
+		// Extract shortcode from URL (supporting both /p/ and /reel/)
+		const shortcode = instagramURL.split(/\/(p|reel)\/([^/?]+)/)[2];
 		if (!shortcode) throw new Error("Invalid Instagram URL");
 
 		const data = await fetchInstagramPost(shortcode);
