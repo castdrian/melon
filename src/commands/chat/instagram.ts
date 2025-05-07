@@ -13,10 +13,10 @@ export class InstagramCommand extends Command {
 			await interaction.deferReply();
 			const value = interaction.options.getString("url", true);
 			const container = await scrapeInstagram(value);
+			if (!container) throw new Error("Received no data");
+
 			await interaction.editReply({
-				// @ts-ignore
 				components: [container],
-				// @ts-ignore
 				flags: MessageFlags.IsComponentsV2,
 			});
 		} catch (error) {
