@@ -103,7 +103,7 @@ async function fetchInstagramPost(
 	return data;
 }
 
-export async function scrapeInstagram(instagramURL: string, message: Message) {
+export async function scrapeInstagram(instagramURL: string, message?: Message) {
 	try {
 		// Extract shortcode from URL (supporting both /p/ and /reel/)
 		const shortcode = instagramURL.split(/\/(p|reel)\/([^/?]+)/)[2];
@@ -175,6 +175,10 @@ export async function scrapeInstagram(instagramURL: string, message: Message) {
 			}
 		}
 
+		if (!message) {
+			return container;
+		}
+
 		await message.suppressEmbeds(true);
 		await message.reply({
 			components: [container],
@@ -183,7 +187,12 @@ export async function scrapeInstagram(instagramURL: string, message: Message) {
 	} catch (error) {
 		const errorMessage =
 			error instanceof Error ? error.message : "Unknown error occurred";
-		await message.reply(`Failed to fetch Instagram post: ${errorMessage}`);
-		message.client.logger.error("Instagram scraping error:", error);
+
+		if (message) {
+			await message.reply(`Failed to fetch Instagram post: ${errorMessage}`);
+			message.client.logger.error("Instagram scraping error:", error);
+		} else {
+			throw new Error(`Failed to fetch Instagram post: ${errorMessage}`);
+		}
 	}
 }
