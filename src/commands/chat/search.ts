@@ -5,6 +5,7 @@ import {
 	type AutocompleteInteraction,
 	type CommandInteraction,
 	ContainerBuilder,
+	InteractionContextType,
 	MessageFlags,
 	SectionBuilder,
 	TextDisplayBuilder,
@@ -376,6 +377,11 @@ export class SearchCommand extends Command {
 				.setIntegrationTypes([
 					ApplicationIntegrationType.GuildInstall,
 					ApplicationIntegrationType.UserInstall,
+				])
+				.setContexts([
+					InteractionContextType.Guild,
+					InteractionContextType.BotDM,
+					InteractionContextType.PrivateChannel,					
 				])
 				.addStringOption((option) =>
 					option //
