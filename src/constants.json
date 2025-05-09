@@ -119,6 +119,11 @@
 		"keys": ["kiof", "kiol", "kiss of life"],
 		"response": "kiss of cultural appropriation",
 		"regex": false
+	  },
+	  {
+		"keys": ["rock", "band", "guitar", "drums", "bass"],
+		"response": "You are not allowed to leave the conversation until you've watched this in 4K.\nhttps://www.youtube.com/watch?v=LEcq8KTZ1_E",
+		"regex": true
 	  }
 	]
   }
