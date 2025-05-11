@@ -11,6 +11,11 @@
 		"regex": false
 	  },
 	  {
+		"keys": ["hai", "haii"],
+		"response": "wo ist der hai?",
+		"regex": false
+	  },
+	  {
 		"keys": ["hola"],
 		"response": "¿que tal?",
 		"regex": false
