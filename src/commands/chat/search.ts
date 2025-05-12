@@ -137,6 +137,9 @@ export class SearchCommand extends Command {
 				const headerInfo = [
 					`# ${idol.names.korean ?? ""} (${idol.names.stage})`,
 					`**Status:** ${this.formatStatus(idol.status)}`,
+					idol.debutDate
+						? `**Debut:** ${time(new Date(idol.debutDate), "D")} (${time(new Date(idol.debutDate), "R")})`
+						: null,
 					idol.names.full ? `**Full Name:** ${idol.names.full}` : null,
 					idol.names.native ? `**Native Name:** ${idol.names.native}` : null,
 					idol.names.japanese
@@ -199,10 +202,11 @@ export class SearchCommand extends Command {
 									(g: {
 										period: {
 											start: string | number | Date;
-											end: string | number | Date;
+											end?: string | number | Date;
 										};
 										status: string;
 										name: string;
+										company?: string;
 									}) => {
 										if (!g.period)
 											return `• ${g.status === "current" ? g.name : `~~${g.name}~~`}`;
@@ -212,12 +216,28 @@ export class SearchCommand extends Command {
 											? new Date(g.period.end)
 											: null;
 
-										const periodStr =
-											endDate?.getFullYear() === startDate.getFullYear()
-												? ` (${time(startDate, "R")})`
-												: ` (${time(startDate, "D")}${endDate ? ` - ${time(endDate, "D")}` : " - Present"})`;
+										const periodStr = `${time(startDate, "D")} (${time(startDate, "R")})${
+											endDate
+												? ` - ${time(endDate, "D")} (${time(endDate, "R")})`
+												: " - Present"
+										}`;
 
-										return `• ${g.status === "current" ? g.name : `~~${g.name}~~`}${periodStr}`;
+										const companyActivity = idol.careerInfo?.activeYears?.find(
+											(period: { start: string | number | Date; }) =>
+												g.company &&
+												idol.company?.history?.some(
+													(h: { name: string | undefined; period: { start: string | number | Date; }; }) =>
+														h.name === g.company &&
+														new Date(h.period.start).getTime() ===
+															new Date(period.start).getTime(),
+												),
+										);
+
+										const companyStr = companyActivity
+											? ` [${time(new Date(companyActivity.start), "D")} (${time(new Date(companyActivity.start), "R")})]`
+											: "";
+
+										return `• ${g.status === "current" ? g.name : `~~${g.name}~~`} (${periodStr})${companyStr}`;
 									},
 								)
 								.join("\n")}`
@@ -246,6 +266,9 @@ export class SearchCommand extends Command {
 					`# ${korean ? `${korean} ` : ""}(${name})`,
 					`**Type:** ${this.formatGroupType(group.type ?? "unknown")}`,
 					`**Status:** ${this.formatStatus(group.status ?? "unknown")}`,
+					group.debutDate
+						? `**Debut:** ${time(new Date(group.debutDate), "D")} (${time(new Date(group.debutDate), "R")})`
+						: null,
 					group.groupInfo?.names?.japanese
 						? `**Japanese Name:** ${group.groupInfo.names.japanese}`
 						: null,
@@ -381,7 +404,7 @@ export class SearchCommand extends Command {
 				.setContexts([
 					InteractionContextType.Guild,
 					InteractionContextType.BotDM,
-					InteractionContextType.PrivateChannel,					
+					InteractionContextType.PrivateChannel,
 				])
 				.addStringOption((option) =>
 					option //
