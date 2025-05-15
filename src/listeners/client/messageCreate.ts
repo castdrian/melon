@@ -19,19 +19,6 @@ export class MessageListener extends Listener {
 	private static lastKeywordResponses = new Map<string, number>();
 	private static KEYWORD_COOLDOWN = 10 * 60 * 1000;
 
-	private canRespond(userId: string): boolean {
-		const lastResponse = MessageListener.lastKeywordResponses.get(userId);
-		const now = Date.now();
-		if (
-			!lastResponse ||
-			now - lastResponse >= MessageListener.KEYWORD_COOLDOWN
-		) {
-			MessageListener.lastKeywordResponses.set(userId, now);
-			return true;
-		}
-		return false;
-	}
-
 	public async run(message: Message) {
 		if (message.author.bot) return;
 		if (message.channel.type === ChannelType.DM) return;
@@ -62,8 +49,6 @@ export class MessageListener extends Listener {
 		}
 
 		for (const { keys, response, regex } of mappings) {
-			if (!this.canRespond(message.author.id)) continue;
-
 			if (regex) {
 				for (const keyword of keys) {
 					const wordRegex = new RegExp(`^${keyword}$`, "i");
