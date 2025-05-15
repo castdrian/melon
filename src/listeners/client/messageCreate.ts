@@ -15,9 +15,7 @@ import { scrapeTikTok } from "@root/src/util/tiktok";
 import { scrapeX } from "@root/src/util/x";
 
 export class MessageListener extends Listener {
-	private static lastSakiMessage = 0;
-	private static lastKeywordResponses = new Map<string, number>();
-	private static KEYWORD_COOLDOWN = 10 * 60 * 1000;
+	private static lastSakiMessage = 0;;
 
 	public async run(message: Message) {
 		if (message.author.bot) return;
