@@ -15,7 +15,7 @@ import { scrapeTikTok } from "@root/src/util/tiktok";
 import { scrapeX } from "@root/src/util/x";
 
 export class MessageListener extends Listener {
-	private static lastSakiMessage = 0;;
+	private static lastSakiMessage = 0;
 
 	public async run(message: Message) {
 		if (message.author.bot) return;
