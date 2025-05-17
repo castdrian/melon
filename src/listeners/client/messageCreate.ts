@@ -17,6 +17,27 @@ import { scrapeX } from "@root/src/util/x";
 export class MessageListener extends Listener {
 	private static lastSakiMessage = 0;
 
+	// URL detection regex pattern
+	private urlRegex =
+		/https?:\/\/[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi;
+
+	/**
+	 * Checks if a matched keyword is part of a URL in the message
+	 * @param content The message content
+	 * @param keyword The matched keyword
+	 * @returns True if the keyword is found inside a URL
+	 */
+	private isKeywordInUrl(content: string, keyword: string): boolean {
+		const urls = content.match(this.urlRegex) || [];
+		for (const url of urls) {
+			// Check if the keyword is part of the URL (case insensitive)
+			if (url.toLowerCase().includes(keyword.toLowerCase())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public async run(message: Message) {
 		if (message.author.bot) return;
 		if (message.channel.type === ChannelType.DM) return;
@@ -54,6 +75,7 @@ export class MessageListener extends Listener {
 			matchAll = false,
 		} of mappings) {
 			let matched = false;
+			let matchedKeyword = "";
 
 			if (regex && matchAll) {
 				// For matchAll, all keywords must be found in the message
@@ -61,13 +83,19 @@ export class MessageListener extends Listener {
 					const wordRegex = new RegExp(keyword, "i");
 					return message.content.match(wordRegex);
 				});
+				if (matched) {
+					if (
+						keys.some((keyword) =>
+							this.isKeywordInUrl(message.content, keyword),
+						)
+					) {
+						continue;
+					}
+				}
 			} else if (regex) {
-				// Standard regex matching for individual keywords - find match anywhere in content
+				// Standard regex matching for individual keywords
 				for (const keyword of keys) {
-					// Check for word boundaries to prevent partial word matches
 					const wordRegex = new RegExp(`\\b${keyword}\\b`, "i");
-
-					// Special case for emoji regex - keep using the existing pattern
 					const emojiRegex = new RegExp(
 						`<a?:\\w*${keyword}\\w*:\\d{17,21}>`,
 						"i",
@@ -77,12 +105,16 @@ export class MessageListener extends Listener {
 						message.content.match(wordRegex) ||
 						message.content.match(emojiRegex)
 					) {
+						matchedKeyword = keyword;
 						matched = true;
 						break;
 					}
 				}
+
+				if (matched && this.isKeywordInUrl(message.content, matchedKeyword)) {
+					continue;
+				}
 			} else {
-				// Exact matching for non-regex keywords
 				for (const keyword of keys) {
 					if (message.content.toLowerCase() === keyword.toLowerCase()) {
 						matched = true;
