@@ -32,6 +32,13 @@ export class MessageListener extends Listener {
 		return false;
 	}
 
+	/**
+	 * Check if text is a Discord emote pattern
+	 */
+	private isEmotePattern(text: string): boolean {
+		return /^<a?:[a-zA-Z0-9_]+:[0-9]{17,21}>$/.test(text);
+	}
+
 	public async run(message: Message) {
 		if (message.author.bot) return;
 		if (message.channel.type === ChannelType.DM) return;
@@ -89,19 +96,30 @@ export class MessageListener extends Listener {
 			} else if (regex) {
 				// Standard regex matching for individual keywords
 				for (const keyword of keys) {
+					// Check if the keyword itself is an emote pattern
+					const isEmoteKeyword = this.isEmotePattern(keyword);
 					const wordRegex = new RegExp(`\\b${keyword}\\b`, "i");
-					const emojiRegex = new RegExp(
-						`<a?:\\w*${keyword}\\w*:\\d{17,21}>`,
-						"i",
-					);
 
-					if (
-						message.content.match(wordRegex) ||
-						message.content.match(emojiRegex)
-					) {
-						matchedKeyword = keyword;
-						matched = true;
-						break;
+					if (isEmoteKeyword) {
+						// If keyword is an emote, match it directly
+						if (message.content.includes(keyword)) {
+							matchedKeyword = keyword;
+							matched = true;
+							break;
+						}
+					} else {
+						// For regular words, make sure they're not inside emotes
+						// Replace all emotes with spaces to maintain word boundaries
+						const contentWithoutEmotes = message.content.replace(
+							/<a?:[a-zA-Z0-9_]+:[0-9]{17,21}>/g,
+							" ",
+						);
+
+						if (contentWithoutEmotes.match(wordRegex)) {
+							matchedKeyword = keyword;
+							matched = true;
+							break;
+						}
 					}
 				}
 
