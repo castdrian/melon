@@ -21,12 +21,6 @@ export class MessageListener extends Listener {
 	private urlRegex =
 		/https?:\/\/[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi;
 
-	/**
-	 * Checks if a matched keyword is part of a URL in the message
-	 * @param content The message content
-	 * @param keyword The matched keyword
-	 * @returns True if the keyword is found inside a URL
-	 */
 	private isKeywordInUrl(content: string, keyword: string): boolean {
 		const urls = content.match(this.urlRegex) || [];
 		for (const url of urls) {
