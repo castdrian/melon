@@ -1,17 +1,17 @@
 [[mappings]]
-keys = ["hi", "hii"]
+keys = ["hi"]
 response = "hello"
-regex = false
+regex = true
 
 [[mappings]]
 keys = ["hello", "hey"]
 response = "hi"
-regex = false
+regex = true
 
 [[mappings]]
-keys = ["hai", "haii"]
+keys = ["hai"]
 response = "wo ist der hai?"
-regex = false
+regex = true
 
 [[mappings]]
 keys = ["hola"]
@@ -21,7 +21,7 @@ regex = false
 [[mappings]]
 keys = ["bye", "gn"]
 response = "bye"
-regex = false
+regex = true
 
 [[mappings]]
 keys = ["yep"]
@@ -69,19 +69,19 @@ response = "leave me alone"
 regex = false
 
 [[mappings]]
-keys = ["lmao", "lmfao", "lol", "lul"]
+keys = ["lmao", "lmfao", "lol", "lul", "lel"]
 response = "ijbol"
-regex = false
+regex = true
 
 [[mappings]]
-keys = ["wbu", "what about you", "what about you?"]
+keys = ["wbu", "what about you", "what about you", "hbu", "how about you"]
 response = "what about em"
-regex = false
+regex = true
 
 [[mappings]]
-keys = ["hru", "how are you", "how are you?"]
+keys = ["hru", "how are you"]
 response = "how is anyone ever really? think about it"
-regex = false
+regex = true
 
 [[mappings]]
 keys = ["what", "wat", "wut", "wot"]
@@ -89,9 +89,9 @@ response = "that"
 regex = false
 
 [[mappings]]
-keys = ["sup", "wsp", "wassup", "wassup?", "what's up", "what's up?"]
+keys = ["sup", "wsp", "what's up"]
 response = "the sky"
-regex = false
+regex = true
 
 [[mappings]]
 keys = ["<a:aryejihug2:813322436803690507>"]
@@ -139,4 +139,14 @@ matchAll = true
 keys = ["twirl", "spin"]
 response = "round and round and round and round and round and round and round and round and round and round and round and round"
 videos = ["YUMINTWIRL.mov"]
+regex = true
+
+[[mappings]]
+keys = ["smol", "small", "tiny", "smolmin"]
+videos = ["SMOLMINKIDNAP.mov", "SMOLMINTALLPLEASE.mov"]
+regex = true
+
+[[mappings]]
+keys = ["papoi", "papoy", "baboy", "baboi", "suminion", "minion"]
+videos = ["SUMINION.mov"]
 regex = true

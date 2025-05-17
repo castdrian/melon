@@ -5,8 +5,8 @@ declare module "*.toml" {
 	interface Mapping {
 		/** Array of trigger keywords */
 		keys: string[];
-		/** Response text to send */
-		response: string;
+		/** Response text to send (optional if videos are provided) */
+		response?: string;
 		/** Whether to use regex matching for the keywords */
 		regex: boolean;
 		/** Optional array of video filenames to send with the response (max 10) */

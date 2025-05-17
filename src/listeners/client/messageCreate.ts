@@ -110,8 +110,13 @@ export class MessageListener extends Listener {
 				}
 
 				if (files.length > 0) {
-					return message.channel.send({ content: response, files });
+					return message.channel.send({
+						content: response || undefined,
+						files,
+					});
 				}
+
+				if (!response) return;
 				return message.channel.send(response);
 			}
 		}
