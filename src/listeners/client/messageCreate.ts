@@ -4,12 +4,12 @@ import { createContext, runInContext } from "node:vm";
 import { Listener } from "@sapphire/framework";
 import { ChannelType, type Message, codeBlock } from "discord.js";
 
-import { mappings } from "@root/src/constants.json";
 import {
 	isInstagramAutoEmbedEnabled,
 	isTikTokAutoEmbedEnabled,
 	isXAutoEmbedEnabled,
 } from "@root/src/database/db";
+import { mappings } from "@root/src/responses.toml";
 import { scrapeInstagram } from "@root/src/util/instagram";
 import { scrapeTikTok } from "@root/src/util/tiktok";
 import { scrapeX } from "@root/src/util/x";
@@ -46,10 +46,28 @@ export class MessageListener extends Listener {
 			}
 		}
 
-		for (const { keys, response, regex } of mappings) {
-			if (regex) {
+		for (const {
+			keys,
+			response,
+			regex,
+			videos = [],
+			matchAll = false,
+		} of mappings) {
+			let matched = false;
+
+			if (regex && matchAll) {
+				// For matchAll, all keywords must be found in the message
+				matched = keys.every((keyword) => {
+					const wordRegex = new RegExp(keyword, "i");
+					return message.content.match(wordRegex);
+				});
+			} else if (regex) {
+				// Standard regex matching for individual keywords - find match anywhere in content
 				for (const keyword of keys) {
-					const wordRegex = new RegExp(`^${keyword}$`, "i");
+					// Check for word boundaries to prevent partial word matches
+					const wordRegex = new RegExp(`\\b${keyword}\\b`, "i");
+
+					// Special case for emoji regex - keep using the existing pattern
 					const emojiRegex = new RegExp(
 						`<a?:\\w*${keyword}\\w*:\\d{17,21}>`,
 						"i",
@@ -59,15 +77,42 @@ export class MessageListener extends Listener {
 						message.content.match(wordRegex) ||
 						message.content.match(emojiRegex)
 					) {
-						return message.channel.send(response);
+						matched = true;
+						break;
 					}
 				}
 			} else {
+				// Exact matching for non-regex keywords
 				for (const keyword of keys) {
 					if (message.content.toLowerCase() === keyword.toLowerCase()) {
-						return message.channel.send(response);
+						matched = true;
+						break;
 					}
 				}
+			}
+
+			if (matched) {
+				const __dirname = path.dirname(new URL(import.meta.url).pathname);
+				const files = [];
+
+				if (videos && videos.length > 0) {
+					for (let i = 0; i < Math.min(videos.length, 10); i++) {
+						const videoPath = path.join(
+							__dirname,
+							"..",
+							"..",
+							"..",
+							"media",
+							videos[i],
+						);
+						files.push(videoPath);
+					}
+				}
+
+				if (files.length > 0) {
+					return message.channel.send({ content: response, files });
+				}
+				return message.channel.send(response);
 			}
 		}
 

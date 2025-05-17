@@ -1,0 +1,142 @@
+[[mappings]]
+keys = ["hi", "hii"]
+response = "hello"
+regex = false
+
+[[mappings]]
+keys = ["hello", "hey"]
+response = "hi"
+regex = false
+
+[[mappings]]
+keys = ["hai", "haii"]
+response = "wo ist der hai?"
+regex = false
+
+[[mappings]]
+keys = ["hola"]
+response = "¿que tal?"
+regex = false
+
+[[mappings]]
+keys = ["bye", "gn"]
+response = "bye"
+regex = false
+
+[[mappings]]
+keys = ["yep"]
+response = "yop"
+regex = false
+
+[[mappings]]
+keys = ["yop"]
+response = "yep"
+regex = false
+
+[[mappings]]
+keys = ["yup"]
+response = "yip"
+regex = false
+
+[[mappings]]
+keys = ["yip"]
+response = "yup"
+regex = false
+
+[[mappings]]
+keys = ["help"]
+response = "no"
+regex = false
+
+[[mappings]]
+keys = ["fr"]
+response = "🇫🇷"
+regex = false
+
+[[mappings]]
+keys = ["real"]
+response = "fake"
+regex = false
+
+[[mappings]]
+keys = ["true"]
+response = "false"
+regex = false
+
+[[mappings]]
+keys = ["melon"]
+response = "leave me alone"
+regex = false
+
+[[mappings]]
+keys = ["lmao", "lmfao", "lol", "lul"]
+response = "ijbol"
+regex = false
+
+[[mappings]]
+keys = ["wbu", "what about you", "what about you?"]
+response = "what about em"
+regex = false
+
+[[mappings]]
+keys = ["hru", "how are you", "how are you?"]
+response = "how is anyone ever really? think about it"
+regex = false
+
+[[mappings]]
+keys = ["what", "wat", "wut", "wot"]
+response = "that"
+regex = false
+
+[[mappings]]
+keys = ["sup", "wsp", "wassup", "wassup?", "what's up", "what's up?"]
+response = "the sky"
+regex = false
+
+[[mappings]]
+keys = ["<a:aryejihug2:813322436803690507>"]
+response = "<a:aryejihug2:1201800490602745866>"
+regex = false
+
+[[mappings]]
+keys = ["<a:ayejided:1032943952166395954>"]
+response = "<a:ayejided:1201877394923978824>"
+regex = false
+
+[[mappings]]
+keys = ["<:yejipuff:614306273340555297>"]
+response = "<:yejipuff:1201877428843323412>"
+regex = false
+
+[[mappings]]
+keys = ["cute", "cutie", "cutiepie", "adorable", "adorbs", "adorbz"]
+response = "<a:socute:1202109324118458448>"
+regex = true
+
+[[mappings]]
+keys = ["who", "whom", "whomst", "who?", "whom?", "whomst?"]
+response = "<:who:1201796740085190706>"
+regex = true
+
+[[mappings]]
+keys = ["kiof", "kiol", "kiss of life"]
+response = "kiss of cultural appropriation"
+regex = true
+
+[[mappings]]
+keys = ["rock", "band", "guitar", "drums", "bass"]
+response = "You are not allowed to leave the conversation until you've watched this in 4K.\nhttps://www.youtube.com/watch?v=LEcq8KTZ1_E"
+regex = true
+
+[[mappings]]
+keys = ["voice", "crack"]
+response = "voice crack girls, it's going down!"
+videos = ["JAYUNVOICECRACK.mov","SEEUNVOICECRACK.mov"]
+regex = true
+matchAll = true
+
+[[mappings]]
+keys = ["twirl", "spin"]
+response = "round and round and round and round and round and round and round and round and round and round and round and round"
+videos = ["YUMINTWIRL.mov"]
+regex = true
