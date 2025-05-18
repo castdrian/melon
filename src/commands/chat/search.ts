@@ -179,7 +179,7 @@ export class SearchCommand extends Command {
 				const sections = [
 					headerInfo,
 					personalInfo,
-					idol.description ? `**Description**\n${idol.description}` : null,
+					idol.description ? `**Description**\n-# ${idol.description}` : null,
 					idol.company?.history?.length
 						? `**Company History**\n${this.formatCompanyHistory(idol.company)}`
 						: null,
