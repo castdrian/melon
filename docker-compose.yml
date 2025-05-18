@@ -1,5 +1,5 @@
 services:
-  melon:
+  cheekies:
     restart: unless-stopped
     build:
       context: .
@@ -7,13 +7,13 @@ services:
       target: release
       args:
         GITHUB_TOKEN: ${GITHUB_TOKEN}
-    container_name: melon
+    container_name: cheekies
     environment:
       - GITHUB_TOKEN
     env_file:
       - .env
     volumes:
      - type: bind
-       source: ./melon.db
-       target: /usr/src/app/melon.db
+       source: ./cheekies.db
+       target: /usr/src/app/cheekies.db
     command: bun start

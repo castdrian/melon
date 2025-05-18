@@ -64,8 +64,8 @@ response = "false"
 regex = false
 
 [[mappings]]
-keys = ["melon"]
-response = "leave me alone"
+keys = ["cheekies"]
+response = "https://cdn.discordapp.com/avatars/1161581190596263986/a_16859eb67b5d5539ca591574d0d32e5b.gif"
 regex = false
 
 [[mappings]]

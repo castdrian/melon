@@ -14,4 +14,4 @@ export const config = createConfig({
 	freeze: true,
 });
 
-export const MELON_COLOR = 0xd23b68;
+export const CHEEKIES_COLOR = 0xd23b68;

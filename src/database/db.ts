@@ -4,7 +4,7 @@ import { drizzle } from 'drizzle-orm/bun-sqlite';
 
 import * as schema from '@src/database/schema';
 
-const sqlite = new Database('melon.db');
+const sqlite = new Database('cheekies.db');
 export const db = drizzle(sqlite, { schema });
 
 export type GuildSettings = typeof schema.guildPreferences.$inferSelect;

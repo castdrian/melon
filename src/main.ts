@@ -19,7 +19,7 @@ const client = new SapphireClient({
   ],
 });
 
-const sqlite = new Database('melon.db');
+const sqlite = new Database('cheekies.db');
 const db = drizzle(sqlite, { schema });
 migrate(db, { migrationsFolder: './src/database/drizzle' });
 

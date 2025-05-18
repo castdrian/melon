@@ -13,7 +13,7 @@ import {
 	time,
 } from "discord.js";
 
-import { MELON_COLOR } from "@root/src/config";
+import { CHEEKIES_COLOR } from "@root/src/config";
 
 interface SocialLinks {
 	instagram?: string;
@@ -128,7 +128,7 @@ export class SearchCommand extends Command {
 				});
 			}
 
-			const container = new ContainerBuilder().setAccentColor(MELON_COLOR);
+			const container = new ContainerBuilder().setAccentColor(CHEEKIES_COLOR);
 
 			// Type check based on properties unique to idols
 			if ("names" in item && "stage" in item.names) {
@@ -223,10 +223,13 @@ export class SearchCommand extends Command {
 										}`;
 
 										const companyActivity = idol.careerInfo?.activeYears?.find(
-											(period: { start: string | number | Date; }) =>
+											(period: { start: string | number | Date }) =>
 												g.company &&
 												idol.company?.history?.some(
-													(h: { name: string | undefined; period: { start: string | number | Date; }; }) =>
+													(h: {
+														name: string | undefined;
+														period: { start: string | number | Date };
+													}) =>
 														h.name === g.company &&
 														new Date(h.period.start).getTime() ===
 															new Date(period.start).getTime(),

@@ -18,7 +18,7 @@ export class ReadyListener extends Listener {
 		}
 
 		const updateActivity = () => {
-			client.user?.setActivity({ type: ActivityType.Custom, state: 'being melon', name: 'melon' });
+			client.user?.setActivity({ type: ActivityType.Custom, state: 'being cheekies', name: 'cheekies' });
 		};
 
 		updateActivity();

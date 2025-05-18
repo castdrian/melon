@@ -1,4 +1,4 @@
-import { MELON_COLOR, config } from "@src/config";
+import { CHEEKIES_COLOR, config } from "@src/config";
 import {
 	ContainerBuilder,
 	MediaGalleryBuilder,
@@ -114,7 +114,7 @@ export async function scrapeInstagram(instagramURL: string, message?: Message) {
 		if (!post) throw new Error("Post not found");
 
 		// Create components
-		const container = new ContainerBuilder().setAccentColor(MELON_COLOR);
+		const container = new ContainerBuilder().setAccentColor(CHEEKIES_COLOR);
 
 		const headerContent = new TextDisplayBuilder().setContent(
 			`Posted ${time(post.taken_at, "R")} by [**@${post.user.username}**](<https://instagram.com/${post.user.username}>)${

@@ -1,4 +1,4 @@
-import { MELON_COLOR } from "@src/config";
+import { CHEEKIES_COLOR } from "@src/config";
 import { Scraper } from "@the-convocation/twitter-scraper";
 import {
 	ContainerBuilder,
@@ -41,7 +41,7 @@ export async function scrapeX(postId: string, message: Message) {
 			.toLowerCase()
 			.includes(ResponseFlags.DELETE_MESSAGE);
 
-		const container = new ContainerBuilder().setAccentColor(MELON_COLOR);
+		const container = new ContainerBuilder().setAccentColor(CHEEKIES_COLOR);
 
 		// Add header section with thumbnail
 		const content = new TextDisplayBuilder().setContent(

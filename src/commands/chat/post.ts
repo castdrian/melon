@@ -24,7 +24,7 @@ export class InfoCommand extends Command {
 			]);
 
 			if (!canSendMessages(channel))
-				return interaction.reply({ content: 'melon cannot send messages to that channel.', ephemeral: true });
+				return interaction.reply({ content: 'cheekies cannot send messages to that channel.', ephemeral: true });
 
 			const mentionsDisabled = interaction.options.getBoolean('disable_mentions') ?? false;
 			const file = interaction.options.getAttachment('file')?.url;
