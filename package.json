@@ -1,6 +1,6 @@
 {
   "name": "cheekies",
-  "version": "1.28.6",
+  "version": "1.28.7",
   "main": "src/main.ts",
   "module": "main.ts",
   "dependencies": {
